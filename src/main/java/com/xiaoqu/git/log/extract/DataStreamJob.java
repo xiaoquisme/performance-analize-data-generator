@@ -18,48 +18,33 @@
 
 package com.xiaoqu.git.log.extract;
 
+import org.apache.flink.api.common.serialization.SimpleStringEncoder;
+import org.apache.flink.api.connector.sink2.Sink;
+import org.apache.flink.core.fs.Path;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
+import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSinkHelper;
+import org.apache.flink.util.StringUtils;
 
-/**
- * Skeleton for a Flink DataStream Job.
- *
- * <p>For a tutorial how to write a Flink application, check the
- * tutorials and examples on the <a href="https://flink.apache.org">Flink Website</a>.
- *
- * <p>To package your application into a JAR file for execution, run
- * 'mvn clean package' on the command line.
- *
- * <p>If you change the name of the main class (with the public static void main(String[] args))
- * method, change the respective entry in the POM.xml file (simply search for 'mainClass').
- */
+import java.net.URL;
+
 public class DataStreamJob {
 
-	public static void main(String[] args) throws Exception {
-		// Sets up the execution environment, which is the main entry point
-		// to building Flink applications.
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    public static void main(String[] args) throws Exception {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        URL resource = DataStreamJob.class.getClassLoader().getResource("git_log.txt");
+        String filePath = resource.getPath();
 
-		/*
-		 * Here, you can start creating your execution plan for Flink.
-		 *
-		 * Start with getting some data from the environment, like
-		 * 	env.fromSequence(1, 10);
-		 *
-		 * then, transform the resulting DataStream<Long> using operations
-		 * like
-		 * 	.filter()
-		 * 	.flatMap()
-		 * 	.window()
-		 * 	.process()
-		 *
-		 * and many more.
-		 * Have a look at the programming guide:
-		 *
-		 * https://nightlies.apache.org/flink/flink-docs-stable/
-		 *
-		 */
+        DataStreamSource<String> stringDataStreamSource = env.setParallelism(1).readTextFile(filePath);
+        StreamingFileSink<String> fileSink = StreamingFileSink.forRowFormat(new Path("/Users/lqqu/learning/git_log_extract/src/main/resources"), new SimpleStringEncoder<String>()).build();
+        SingleOutputStreamOperator<String> map = stringDataStreamSource.filter(s -> !StringUtils.isNullOrWhitespaceOnly(s))
+                .map(String::trim);
 
-		// Execute program, beginning computation.
-		env.execute("Flink Java API Skeleton");
-	}
+        map.addSink(fileSink);
+
+        env.execute("Flink Java API Skeleton");
+    }
 }
