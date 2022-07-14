@@ -11,16 +11,12 @@ import java.net.URL;
 public class DataStreamWebApiJob {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        URL resource = DataStreamWebApiJob.class.getClassLoader().getResource("git_log_secret.txt");
-        String filePath = resource.getPath();
 
-        DataStreamSource<String> stringDataStreamSource = env.readTextFile(filePath);
-        DataStream<Tuple2<CommitLog, String>> map = stringDataStreamSource
-                .filter(s -> !StringUtils.isNullOrWhitespaceOnly(s))
-                .map(String::trim)
-                .map(new Mapper());
+        DataStreamSource<GitResponse> stringDataStreamSource = env.addSource(new WebApiSource());
+        DataStream<CommitLog> map = stringDataStreamSource
+                .map(new WebApiMapper());
 
-        map.addSink(new SinkToMysql());
+        map.addSink(new SinkToMysqlForWebApi());
 
         env.execute("Flink Java API Skeleton");
     }

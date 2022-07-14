@@ -13,6 +13,26 @@ public class CommitLog {
     private String jiraNo;
     private String userName;
     private String message;
+    private String commitDate;
+
+    public String getCommitDate() {
+        return commitDate;
+    }
+
+    public void setCommitDate(String commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    public String getCommitEmail() {
+        return commitEmail;
+    }
+
+    public void setCommitEmail(String commitEmail) {
+        this.commitEmail = commitEmail;
+    }
+
+    private String commitEmail;
+
 
     public String getJiraNo() {
         return jiraNo;
