@@ -10,6 +10,8 @@ public class WebApiMapper extends RichMapFunction<GitResponse, CommitLog> {
         commitLog.setCommitId(value.sha);
         commitLog.setMessage(commit.message);
         commitLog.setUserName(commit.committer.name);
+        commitLog.setCommitDate(commit.committer.date);
+        commitLog.setCommitEmail(commit.committer.email);
         return commitLog;
     }
 }

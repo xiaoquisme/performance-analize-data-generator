@@ -21,7 +21,7 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);
-        String sql = "insert into git_log(id,jira_no, message, author)values(?,?,?,?);";
+        String sql = "insert into git_log(id,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?);";
         preparedStatement = connection.prepareStatement(sql);
     }
 
@@ -44,6 +44,8 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
             preparedStatement.setString(2, value1.getJiraNo());
             preparedStatement.setString(3, value1.getMessage());
             preparedStatement.setString(4, value1.getUserName());
+            preparedStatement.setString(5, value1.getCommitDate());
+            preparedStatement.setString(6, value1.getCommitEmail());
             preparedStatement.execute();
         } catch (Exception e) {
             System.out.printf("===============================================%s", value1);
