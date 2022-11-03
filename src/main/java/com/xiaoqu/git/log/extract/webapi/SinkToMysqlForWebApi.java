@@ -1,6 +1,7 @@
-package com.xiaoqu.git.log.extract;
+package com.xiaoqu.git.log.extract.webapi;
 
 
+import com.xiaoqu.git.log.extract.CommitLog;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
@@ -15,9 +16,9 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
     @Override
     public void open(Configuration parameters) throws Exception {
         String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/actix_example";
+        String url = "jdbc:mysql://localhost:30006/performance_analyze";
         String username = "root";
-        String password = "123456";
+        String password = "root";
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);
@@ -48,6 +49,7 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
             preparedStatement.setString(6, value1.getCommitEmail());
             preparedStatement.execute();
         } catch (Exception e) {
+            System.out.println(e);
             System.out.printf("===============================================%s", value1);
         }
 

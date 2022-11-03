@@ -1,5 +1,6 @@
-package com.xiaoqu.git.log.extract;
+package com.xiaoqu.git.log.extract.webapi;
 
+import com.xiaoqu.git.log.extract.*;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -15,6 +16,6 @@ public class DataStreamWebApiJob {
 
         map.addSink(new SinkToMysqlForWebApi());
 
-        env.execute("Flink Java API Skeleton");
+        env.execute("Sync log to DB");
     }
 }

@@ -1,7 +1,7 @@
-package com.xiaoqu.git.log.extract;
+package com.xiaoqu.git.log.extract.webapi;
 
+import com.xiaoqu.git.log.extract.CommitLog;
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

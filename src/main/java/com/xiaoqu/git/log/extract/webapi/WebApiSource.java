@@ -1,5 +1,6 @@
-package com.xiaoqu.git.log.extract;
+package com.xiaoqu.git.log.extract.webapi;
 
+import com.xiaoqu.git.log.extract.GitResponse;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectReader;
