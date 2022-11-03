@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract;
+package com.xiaoqu.git.log.extract.common;
 
 public class CommitLog {
     public String getCommitId() {

@@ -1,7 +1,7 @@
 package com.xiaoqu.git.log.extract.webapi;
 
 
-import com.xiaoqu.git.log.extract.CommitLog;
+import com.xiaoqu.git.log.extract.common.CommitLog;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 

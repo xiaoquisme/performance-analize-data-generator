@@ -1,6 +1,6 @@
 package com.xiaoqu.git.log.extract.webapi;
 
-import com.xiaoqu.git.log.extract.CommitLog;
+import com.xiaoqu.git.log.extract.common.CommitLog;
 import org.apache.flink.api.common.functions.RichMapFunction;
 
 import java.util.regex.Matcher;

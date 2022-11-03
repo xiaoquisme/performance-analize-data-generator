@@ -1,6 +1,6 @@
 package com.xiaoqu.git.log.extract.webapi;
 
-import com.xiaoqu.git.log.extract.*;
+import com.xiaoqu.git.log.extract.common.CommitLog;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

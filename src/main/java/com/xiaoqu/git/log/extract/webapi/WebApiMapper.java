@@ -1,7 +1,6 @@
 package com.xiaoqu.git.log.extract.webapi;
 
-import com.xiaoqu.git.log.extract.CommitLog;
-import com.xiaoqu.git.log.extract.GitResponse;
+import com.xiaoqu.git.log.extract.common.CommitLog;
 import org.apache.flink.api.common.functions.RichMapFunction;
 
 public class WebApiMapper extends RichMapFunction<GitResponse, CommitLog> {
