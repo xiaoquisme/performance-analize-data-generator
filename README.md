@@ -11,3 +11,19 @@ in a git project folder exec
 git log --oneline --decorate --graph > git_log.txt
 ```
 then copy `git_log.txt` to `resource` folder.
+
+## database setup
+
+```sql
+create database performance_analyze;
+create table performance_analyze.git_log
+(
+    id varchar(100) primary key ,
+    project varchar(100),
+    jira_no varchar(100),
+    message varchar(1000),
+    author varchar(100),
+    commit_date varchar(100),
+    commit_email varchar(100)
+);
+```
