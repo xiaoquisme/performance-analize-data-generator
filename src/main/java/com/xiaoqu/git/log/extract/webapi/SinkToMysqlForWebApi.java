@@ -12,6 +12,11 @@ import java.sql.PreparedStatement;
 public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
     private Connection connection = null;
     private PreparedStatement preparedStatement = null;
+    private final String repo;
+
+    public SinkToMysqlForWebApi(String repo) {
+        this.repo = repo;
+    }
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -22,7 +27,7 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);
-        String sql = "insert into git_log(id,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?);";
+        String sql = "insert into git_log(id,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?);";
         preparedStatement = connection.prepareStatement(sql);
     }
 
@@ -42,11 +47,12 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
         CommitLog value1 = value;
         try {
             preparedStatement.setString(1, value1.getCommitId());
-            preparedStatement.setString(2, value1.getJiraNo());
-            preparedStatement.setString(3, value1.getMessage());
-            preparedStatement.setString(4, value1.getUserName());
-            preparedStatement.setString(5, value1.getCommitDate());
-            preparedStatement.setString(6, value1.getCommitEmail());
+            preparedStatement.setString(2, repo);
+            preparedStatement.setString(3, value1.getJiraNo());
+            preparedStatement.setString(4, value1.getMessage());
+            preparedStatement.setString(5, value1.getUserName());
+            preparedStatement.setString(6, value1.getCommitDate());
+            preparedStatement.setString(7, value1.getCommitEmail());
             preparedStatement.execute();
         } catch (Exception e) {
             System.out.println(e);

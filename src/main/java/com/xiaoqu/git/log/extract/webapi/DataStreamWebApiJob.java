@@ -9,12 +9,12 @@ public class DataStreamWebApiJob {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStreamSource<GitResponse> stringDataStreamSource = env.addSource(new WebApiSource());
+        DataStreamSource<GitResponse> stringDataStreamSource = env.addSource(new WebApiSource(repoOwner, repo, null));
         DataStream<CommitLog> map = stringDataStreamSource
                 .map(new WebApiMapper())
                 .map(new ProjectMapper());
 
-        map.addSink(new SinkToMysqlForWebApi());
+        map.addSink(new SinkToMysqlForWebApi(repo));
 
         env.execute("Sync log to DB");
     }
