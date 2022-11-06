@@ -84,6 +84,10 @@ public class CommitLog {
                 ", jiraNo='" + jiraNo + '\'' +
                 ", userName='" + userName + '\'' +
                 ", message='" + message + '\'' +
+                ", commitDate='" + commitDate + '\'' +
+                ", repoOwner='" + repoOwner + '\'' +
+                ", repoName='" + repoName + '\'' +
+                ", commitEmail='" + commitEmail + '\'' +
                 '}';
     }
 }

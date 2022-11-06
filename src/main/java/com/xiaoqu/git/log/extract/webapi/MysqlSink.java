@@ -41,6 +41,7 @@ public class MysqlSink extends RichSinkFunction<CommitLog> {
     @Override
     public void invoke(CommitLog value, Context context) throws Exception {
         CommitLog value1 = value;
+        System.out.println("git commit log value is :"+ value1);
         try {
             preparedStatement.setString(1, value1.getCommitId());
             preparedStatement.setString(2, value1.getRepoOwner());
