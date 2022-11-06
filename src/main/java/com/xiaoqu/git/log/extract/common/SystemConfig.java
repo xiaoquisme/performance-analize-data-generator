@@ -33,7 +33,8 @@ public class SystemConfig {
 
     private JiraConfig jira;
 
-    public static class DatabaseConfig {
+    public static class DatabaseConfig implements Serializable {
+        private static final long serialVersionUID = -1082413991501913743L;
         private String url;
         private String username;
         private String password;
