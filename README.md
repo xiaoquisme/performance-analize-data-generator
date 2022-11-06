@@ -19,6 +19,7 @@ create database performance_analyze;
 create table performance_analyze.git_log
 (
     id varchar(100) primary key ,
+    repo_owner varchar(100),
     project varchar(100),
     jira_no varchar(100),
     message varchar(1000),
@@ -30,3 +31,6 @@ create table performance_analyze.git_log
 
 ## github open api docs
 [https://docs.github.com/en/rest/commits/commits#list-commits](https://docs.github.com/en/rest/commits/commits#list-commits)
+
+## jira docs
+https://docs.atlassian.com/jira-software/REST/7.3.1/
