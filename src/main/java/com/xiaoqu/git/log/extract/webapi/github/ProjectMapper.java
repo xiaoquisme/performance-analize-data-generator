@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract.webapi;
+package com.xiaoqu.git.log.extract.webapi.github;
 
 import com.xiaoqu.git.log.extract.common.CommitLog;
 import org.apache.flink.api.common.functions.RichMapFunction;

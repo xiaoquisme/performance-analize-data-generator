@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract.webapi;
+package com.xiaoqu.git.log.extract.webapi.github;
 
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

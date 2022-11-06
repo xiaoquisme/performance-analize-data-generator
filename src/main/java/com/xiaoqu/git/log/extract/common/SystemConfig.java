@@ -22,6 +22,16 @@ public class SystemConfig {
     private DatabaseConfig  db;
     private GithubConfig github;
 
+    public JiraConfig getJira() {
+        return jira;
+    }
+
+    public void setJira(JiraConfig jira) {
+        this.jira = jira;
+    }
+
+    private JiraConfig jira;
+
     public static class DatabaseConfig {
         private String url;
         private String username;
@@ -100,6 +110,36 @@ public class SystemConfig {
             public void setRepos(List<String> repos) {
                 this.repos = repos;
             }
+        }
+    }
+
+    public static class JiraConfig {
+        private String token;
+        private String url;
+        private List<String> projects;
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public List<String> getProjects() {
+            return projects;
+        }
+
+        public void setProjects(List<String> projects) {
+            this.projects = projects;
         }
     }
 }

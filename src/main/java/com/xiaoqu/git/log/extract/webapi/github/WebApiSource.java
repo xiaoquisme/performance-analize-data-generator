@@ -1,6 +1,7 @@
-package com.xiaoqu.git.log.extract.webapi;
+package com.xiaoqu.git.log.extract.webapi.github;
 
 
+import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
@@ -71,7 +72,7 @@ public class WebApiSource extends RichSourceFunction<GitResponseContext> {
     private InputStream sendRequest(String path) throws IOException {
         URL url = new URL(path);
         HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
-        String token = DataStreamWebApiJob.config.getGithub().getToken();
+        String token = SystemConfigLoader.config.getGithub().getToken();
         myURLConnection.setRequestProperty("Authorization", "Bearer " + token);
         myURLConnection.setRequestMethod("GET");
         return myURLConnection.getInputStream();

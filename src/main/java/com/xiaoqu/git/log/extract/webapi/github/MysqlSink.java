@@ -1,8 +1,9 @@
-package com.xiaoqu.git.log.extract.webapi;
+package com.xiaoqu.git.log.extract.webapi.github;
 
 
 import com.xiaoqu.git.log.extract.common.CommitLog;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
+import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
@@ -15,7 +16,7 @@ public class MysqlSink extends RichSinkFunction<CommitLog> {
     private PreparedStatement preparedStatement = null;
     @Override
     public void open(Configuration parameters) throws Exception {
-        SystemConfig.DatabaseConfig dbConfig = DataStreamWebApiJob.config.getDb();
+        SystemConfig.DatabaseConfig dbConfig = SystemConfigLoader.config.getDb();
         String driver = dbConfig.getDriver();
         String url = dbConfig.getUrl();
         String username = dbConfig.getUsername();
