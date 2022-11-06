@@ -15,7 +15,10 @@ public class JiraEpicSink extends RichSinkFunction<JiraEpic> {
     private PreparedStatement preparedStatement = null;
     @Override
     public void open(Configuration parameters) throws Exception {
-        SystemConfig.DatabaseConfig dbConfig = SystemConfigLoader.config.getDb();
+        extracted("insert into jira_epic(id, `key`, link, name, summary, is_done, board_id)values(?,?,?,?,?,?,?) on duplicate key update id = id;", SystemConfigLoader.config.getDb());
+    }
+
+    private void extracted(String sql, SystemConfig.DatabaseConfig dbConfig) throws ClassNotFoundException, SQLException {
         String driver = dbConfig.getDriver();
         String url = dbConfig.getUrl();
         String username = dbConfig.getUsername();
@@ -23,7 +26,6 @@ public class JiraEpicSink extends RichSinkFunction<JiraEpic> {
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);
-        String sql = "insert into jira_epic(id, `key`, link, name, summary, is_done, board_id)values(?,?,?,?,?,?,?) on duplicate key update id = id;";
         preparedStatement = connection.prepareStatement(sql);
     }
 

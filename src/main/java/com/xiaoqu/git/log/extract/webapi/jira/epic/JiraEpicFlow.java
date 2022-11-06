@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequest;
+
 public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardDb, JiraEpic> {
     private SystemConfig.JiraConfig jiraConfig;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -21,7 +23,7 @@ public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardDb, JiraEpic> {
 
     @Override
     public void flatMap(JiraBoardDb value, Collector<JiraEpic> out) throws Exception {
-        objectMapper.readValue(getJiraEpics(value.id), JiraEpicResponse.class)
+        getJiraEpics(value.id)
                 .values
                 .stream()
                 .map(item -> {
@@ -31,17 +33,8 @@ public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardDb, JiraEpic> {
                 .forEach(out::collect);
     }
 
-    private InputStream getJiraEpics(String boardId) throws IOException {
+    private JiraEpicResponse getJiraEpics(String boardId) throws IOException {
         String url = String.format("%s/rest/agile/1.0/board/%s/epic", jiraConfig.getUrl(), boardId);
-        return sendRequest(url);
-    }
-
-    private InputStream sendRequest(String path) throws IOException {
-        URL url = new URL(path);
-        HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
-        String token = jiraConfig.getToken();
-        myURLConnection.setRequestProperty("Authorization", "Basic " + token);
-        myURLConnection.setRequestMethod("GET");
-        return myURLConnection.getInputStream();
+        return sendRequest(url, jiraConfig.getToken(), JiraEpicResponse.class);
     }
 }
