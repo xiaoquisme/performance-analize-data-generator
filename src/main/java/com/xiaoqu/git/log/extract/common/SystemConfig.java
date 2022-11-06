@@ -1,5 +1,6 @@
 package com.xiaoqu.git.log.extract.common;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class SystemConfig {
@@ -113,7 +114,8 @@ public class SystemConfig {
         }
     }
 
-    public static class JiraConfig {
+    public static class JiraConfig implements Serializable {
+        private static final long serialVersionUID = 1767925853714527170L;
         private String token;
         private String url;
         private List<String> projects;

@@ -7,5 +7,7 @@ github:
   owner:
     name: "OWNER_NAME"
     repos:
-      - "REPO NAME"
-  token: "<OTKEN>"
+  token: "<TOKEN>"
+jira:
+  token: "<TOKEN>"
+  url : "https://xxxx.atlassian.net"
