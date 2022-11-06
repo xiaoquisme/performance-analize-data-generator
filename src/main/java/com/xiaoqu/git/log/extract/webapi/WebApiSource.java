@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.List;
 
 public class WebApiSource extends RichSourceFunction<GitResponse> {
-    private StringBuilder path = new StringBuilder();
+    private final StringBuilder path = new StringBuilder();
     private static final String BASE_PATH = "https://api.github.com/repos";
     public WebApiSource(String repoOwner, String repo, String since) {
         if(since == null) {
@@ -36,7 +36,6 @@ public class WebApiSource extends RichSourceFunction<GitResponse> {
     }
     @Override
     public void run(SourceContext<GitResponse> ctx) throws Exception {
-        String path = "https://api.github.com/repos/SeaQL/sea-orm/commits?page=%s&per_page=100";
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<GitResponse>>() {});
         int pageCounter = 1;
@@ -54,7 +53,8 @@ public class WebApiSource extends RichSourceFunction<GitResponse> {
     private InputStream sendRequest(String path) throws IOException {
         URL url = new URL(path);
         HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
-        myURLConnection.setRequestProperty("Authorization", "Bearer <TOKEN>");
+        String token = DataStreamWebApiJob.config.getGithub().getToken();
+        myURLConnection.setRequestProperty("Authorization", "Bearer "+ token);
         myURLConnection.setRequestMethod("GET");
         return myURLConnection.getInputStream();
     }

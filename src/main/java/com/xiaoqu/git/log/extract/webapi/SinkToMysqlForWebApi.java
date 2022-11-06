@@ -2,6 +2,7 @@ package com.xiaoqu.git.log.extract.webapi;
 
 
 import com.xiaoqu.git.log.extract.common.CommitLog;
+import com.xiaoqu.git.log.extract.common.SystemConfig;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
@@ -20,14 +21,15 @@ public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:30006/performance_analyze";
-        String username = "root";
-        String password = "root";
+        SystemConfig.DatabaseConfig dbConfig = DataStreamWebApiJob.config.getDb();
+        String driver = dbConfig.getDriver();
+        String url = dbConfig.getUrl();
+        String username = dbConfig.getUsername();
+        String password = dbConfig.getPassword();
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);
-        String sql = "insert into git_log(id,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?);";
+        String sql = "insert into git_log(id,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?) on duplicate key update id = id;";
         preparedStatement = connection.prepareStatement(sql);
     }
 
