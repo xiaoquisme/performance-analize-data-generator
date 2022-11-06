@@ -9,22 +9,23 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class DataStreamWebApiJob {
     public static SystemConfig config;
 
     public static void main(String[] args) throws Exception {
         config = getSystemConfig();
-        String repo = config.getGithub().getOwner().getRepos().get(0);
         String repoOwner = config.getGithub().getOwner().getName();
+        List<String> repos = config.getGithub().getOwner().getRepos();
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        DataStreamSource<GitResponse> stringDataStreamSource = env.addSource(new WebApiSource(repoOwner, repo, null));
+        DataStreamSource<GitResponseContext> stringDataStreamSource = env.addSource(new WebApiSource(repoOwner, repos, null));
         DataStream<CommitLog> map = stringDataStreamSource
                 .map(new WebApiMapper())
                 .map(new ProjectMapper());
 
-        map.addSink(new SinkToMysqlForWebApi(repo));
+        map.addSink(new SinkToMysqlForWebApi());
 
         env.execute("Sync log to DB");
     }

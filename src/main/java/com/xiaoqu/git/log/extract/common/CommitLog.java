@@ -14,6 +14,25 @@ public class CommitLog {
     private String userName;
     private String message;
     private String commitDate;
+    private String repoOwner;
+
+    public String getRepoOwner() {
+        return repoOwner;
+    }
+
+    public void setRepoOwner(String repoOwner) {
+        this.repoOwner = repoOwner;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
+    }
+
+    private String repoName;
 
     public String getCommitDate() {
         return commitDate;

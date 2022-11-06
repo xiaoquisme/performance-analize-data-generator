@@ -12,21 +12,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class WebApiSource extends RichSourceFunction<GitResponse> {
+public class WebApiSource extends RichSourceFunction<GitResponseContext> {
     private final StringBuilder path = new StringBuilder();
     private static final String BASE_PATH = "https://api.github.com/repos";
-    public WebApiSource(String repoOwner, String repo, String since) {
-        if(since == null) {
+    private String repoOwner;
+    private List<String> repos;
+
+    public WebApiSource(String repoOwner, List<String> repos, String since) {
+        this.repoOwner = repoOwner;
+        this.repos = repos;
+        if (since == null) {
             path.append(BASE_PATH)
                     .append("/" + repoOwner)
-                    .append("/" + repo)
+                    .append("/%s")
                     .append("/commits")
                     .append("?perPage=100")
                     .append("&page=%s");
-        } else  {
+        } else {
             path.append(BASE_PATH)
                     .append("/" + repoOwner)
-                    .append("/" + repo)
+                    .append("/%s")
                     .append("/commits")
                     .append("?perPage=100")
                     .append("&page=%s")
@@ -35,26 +40,33 @@ public class WebApiSource extends RichSourceFunction<GitResponse> {
 
     }
     @Override
-    public void run(SourceContext<GitResponse> ctx) throws Exception {
+    public void run(SourceContext<GitResponseContext> ctx) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<GitResponse>>() {});
+        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<GitResponseContext>>() {});
         int pageCounter = 1;
-        while (true) {
-            String newPath = String.format(path.toString(), pageCounter++);
-            InputStream inputStream = sendRequest(newPath);
-            List<GitResponse> response = objectReader.readValue(inputStream);
-            if (response.isEmpty()) {
-                break;
+        for (String repo : repos) {
+            while (true) {
+                String newPath = String.format(path.toString(), repo, pageCounter++);
+                InputStream inputStream = sendRequest(newPath);
+                List<GitResponseContext> response = objectReader.readValue(inputStream);
+                if (response.isEmpty()) {
+                    break;
+                }
+                response.stream().map(item -> {
+                    item.repoName = repo;
+                    item.repoOwner = repoOwner;
+                    return item;
+                }).forEach(ctx::collect);
             }
-            response.forEach(ctx::collect);
         }
+
     }
 
     private InputStream sendRequest(String path) throws IOException {
         URL url = new URL(path);
         HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
         String token = DataStreamWebApiJob.config.getGithub().getToken();
-        myURLConnection.setRequestProperty("Authorization", "Bearer "+ token);
+        myURLConnection.setRequestProperty("Authorization", "Bearer " + token);
         myURLConnection.setRequestMethod("GET");
         return myURLConnection.getInputStream();
     }
