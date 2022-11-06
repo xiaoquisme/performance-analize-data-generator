@@ -25,7 +25,7 @@ public class DataStreamWebApiJob {
                 .map(new WebApiMapper())
                 .map(new ProjectMapper());
 
-        map.addSink(new SinkToMysqlForWebApi());
+        map.addSink(new MysqlSink());
 
         env.execute("Sync log to DB");
     }

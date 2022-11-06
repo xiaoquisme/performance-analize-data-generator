@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-public class SinkToMysqlForWebApi extends RichSinkFunction<CommitLog> {
+public class MysqlSink extends RichSinkFunction<CommitLog> {
     private Connection connection = null;
     private PreparedStatement preparedStatement = null;
     @Override
