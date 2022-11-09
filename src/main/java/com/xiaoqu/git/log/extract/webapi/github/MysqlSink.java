@@ -2,47 +2,27 @@ package com.xiaoqu.git.log.extract.webapi.github;
 
 
 import com.xiaoqu.git.log.extract.common.CommitLog;
+import com.xiaoqu.git.log.extract.common.SinkBase;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
-import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+public class MysqlSink extends SinkBase<CommitLog> {
+    private SystemConfig.DatabaseConfig dbConfig;
 
-public class MysqlSink extends RichSinkFunction<CommitLog> {
-    private Connection connection = null;
-    private PreparedStatement preparedStatement = null;
-    @Override
-    public void open(Configuration parameters) throws Exception {
-        SystemConfig.DatabaseConfig dbConfig = SystemConfigLoader.config.getDb();
-        String driver = dbConfig.getDriver();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
-        Class.forName(driver);
-
-        connection = DriverManager.getConnection(url, username, password);
-        String sql = "insert into git_log(id,repo_owner,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?,?) on duplicate key update id = id;";
-        preparedStatement = connection.prepareStatement(sql);
+    public MysqlSink(SystemConfig.DatabaseConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
     @Override
-    public void close() throws Exception {
-        if (connection != null) {
-            connection.close();
-        }
-        if (preparedStatement != null) {
-            preparedStatement.close();
-        }
-        super.close();
+    public void open(Configuration parameters) throws Exception {
+
+        String sql = "insert into git_log(id,repo_owner,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?,?) on duplicate key update id = id;";
+        prepare(sql,dbConfig);
     }
 
     @Override
     public void invoke(CommitLog value, Context context) throws Exception {
         CommitLog value1 = value;
-        System.out.println("git commit log value is :"+ value1);
         try {
             preparedStatement.setString(1, value1.getCommitId());
             preparedStatement.setString(2, value1.getRepoOwner());

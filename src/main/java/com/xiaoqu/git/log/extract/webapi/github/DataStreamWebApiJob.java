@@ -3,8 +3,6 @@ package com.xiaoqu.git.log.extract.webapi.github;
 import com.xiaoqu.git.log.extract.common.CommitLog;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.util.List;
@@ -17,12 +15,14 @@ public class DataStreamWebApiJob {
         List<String> repos = config.getGithub().getOwner().getRepos();
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        DataStreamSource<GitResponseContext> stringDataStreamSource = env.addSource(new WebApiSource(repoOwner, repos, null));
-        DataStream<CommitLog> map = stringDataStreamSource
+        env.addSource(new WebApiSource(repoOwner, repos, null))
+                .keyBy(item -> item.repoOwner)
                 .map(new WebApiMapper())
-                .map(new ProjectMapper());
-
-        map.addSink(new MysqlSink());
+                .keyBy(CommitLog::getRepoName)
+                .map(new ProjectMapper())
+                .keyBy(CommitLog::getCommitId)
+                .addSink(new MysqlSink(config.getDb()))
+                .setParallelism(20);
 
         env.execute("Sync log to DB");
     }
