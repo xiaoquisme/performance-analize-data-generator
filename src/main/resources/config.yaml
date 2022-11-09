@@ -9,5 +9,6 @@ github:
     repos:
   token: "<TOKEN>"
 jira:
-  token: "<TOKEN>"
-  url : "https://xxxx.atlassian.net"
+  url : "https://XXX.atlassian.net"
+  username: ""
+  password: ""

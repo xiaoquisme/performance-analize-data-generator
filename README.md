@@ -60,6 +60,7 @@ create table jira_issue(
 create table jira_worklog (
   id bigint primary key ,
   issue_id bigint,
+  updater_name varchar(100),
   update_author varchar(100) comment 'updateAuthor.emailAddress',
   created varchar(100) comment 'created',
   timeSpent varchar(100) comment 'timeSpent'

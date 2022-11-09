@@ -117,18 +117,27 @@ public class SystemConfig {
 
     public static class JiraConfig implements Serializable {
         private static final long serialVersionUID = 1767925853714527170L;
-        private String token;
+        private String username;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        private String password;
         private String url;
         private List<String> projects;
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
         public String getUrl() {
             return url;
         }
