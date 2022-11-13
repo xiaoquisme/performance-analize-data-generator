@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flink-service
+  namespace: database
+spec:
+  selector:
+    app: flink-service
+  type: NodePort
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: flink-service
+    protocol: TCP
+    port: 8081
+    targetPort: 8081 
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 30801
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  flink-deploy
+  namespace: database
+  labels:
+    app:  flink-deploy
+spec:
+  selector:
+    matchLabels:
+      app: flink-deploy
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  flink-deploy
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name:  flink-deploy
+        image:  flink:latest
+        args: ["taskmanager"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 1000m
+            memory: 10240Mi
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+          - name: "FLINK_PROPERTIES"
+            value: "jobmanager.rpc.address: jobmanager"
+        volumeMounts:
+          - name: flink-config
+            mountPath: /opt/flink/conf/flink.conf
+            subPath: flink.conf
+        ports:
+        - containerPort:  8081
+          name:  flink-deploy
+      volumes:
+        - name: flink-config
+          configMap:
+            name: flink-configmap
+      restartPolicy: Always
