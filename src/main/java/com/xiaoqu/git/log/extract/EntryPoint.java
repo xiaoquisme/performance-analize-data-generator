@@ -9,8 +9,8 @@ import com.xiaoqu.git.log.extract.webapi.jira.worklog.JiraWorkLogJob;
 public class EntryPoint {
 
     public static void main(String[] args) throws Exception {
-//        DataStreamWebApiJob.run();
-        JiraBoardJob.run();
+        DataStreamWebApiJob.run();
+//        JiraBoardJob.run();
 //        JiraEpicJob.run();
 //        JiraIssueJob.run();
 //        JiraWorkLogJob.run();
