@@ -4,8 +4,8 @@ import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-public class WorkLogJob {
-    public static void main(String[] args) throws Exception {
+public class JiraWorkLogJob {
+    public static void run() throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         SystemConfig systemConfig = SystemConfigLoader.config;
         env.addSource(new JiraWorkLogSource(systemConfig.getDb()))

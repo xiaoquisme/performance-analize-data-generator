@@ -5,7 +5,7 @@ import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class JiraIssueJob {
-    public static void main(String[] args) throws Exception {
+    public static void run() throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         SystemConfig config = SystemConfigLoader.config;
         env.addSource(new JiraIssueSource(config.getDb()))

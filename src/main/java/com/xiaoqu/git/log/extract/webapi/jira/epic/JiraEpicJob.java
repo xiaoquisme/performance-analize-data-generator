@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class JiraEpicJob {
 
-    public static void main(String[] args) throws Exception {
+    public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
         SystemConfig.JiraConfig jiraConfig = config.getJira();
 

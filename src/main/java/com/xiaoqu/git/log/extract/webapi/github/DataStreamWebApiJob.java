@@ -9,20 +9,18 @@ import java.util.List;
 
 public class DataStreamWebApiJob {
 
-    public static void main(String[] args) throws Exception {
+    public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
         String repoOwner = config.getGithub().getOwner().getName();
         List<String> repos = config.getGithub().getOwner().getRepos();
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.addSource(new WebApiSource(repoOwner, repos, null))
-                .keyBy(item -> item.repoOwner)
                 .map(new WebApiMapper())
-                .keyBy(CommitLog::getRepoName)
                 .map(new ProjectMapper())
-                .keyBy(CommitLog::getCommitId)
+                .keyBy(CommitLog::getRepoName)
                 .addSink(new MysqlSink(config.getDb()))
-                .setParallelism(20);
+                .setParallelism(10);
 
         env.execute("Sync log to DB");
     }

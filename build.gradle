@@ -16,11 +16,11 @@ ext {
 
 // artifact properties
 group = 'com.xiaoqu.git.log.extract'
-version = '0.1-SNAPSHOT'
+version = '1.0-github'
 if (flinkVersionNew) {
-    mainClassName = 'com.xiaoqu.git.log.extract.DataStreamJob'
+    mainClassName = 'com.xiaoqu.git.log.extract.EntryPoint'
 } else {
-    mainClassName = 'com.xiaoqu.git.log.extract.StreamingJob'
+    mainClassName = 'com.xiaoqu.git.log.extract.EntryPoint'
 }
 description = """Flink Quickstart Job"""
 
@@ -79,8 +79,7 @@ dependencies {
     runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
     runtimeOnly "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     runtimeOnly "org.apache.logging.log4j:log4j-core:${log4jVersion}"
-    implementation 'org.yaml:snakeyaml:1.21'
-
+    implementation 'org.yaml:snakeyaml:1.33'
     // Add test dependencies here.
     // testCompile "junit:junit:4.12"
 }
@@ -101,7 +100,8 @@ run.classpath = sourceSets.main.runtimeClasspath
 jar {
     manifest {
         attributes 'Built-By': System.getProperty('user.name'),
-                'Build-Jdk': System.getProperty('java.version')
+                'Build-Jdk': System.getProperty('java.version'),
+                'Main-Class': 'com.xiaoqu.git.log.extract.EntryPoint'
     }
 }
 
