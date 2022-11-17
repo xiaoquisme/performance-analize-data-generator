@@ -16,7 +16,7 @@ ext {
 
 // artifact properties
 group = 'com.xiaoqu.git.log.extract'
-version = '1.0-jira-epic'
+version = '1.0-jira-issue'
 if (flinkVersionNew) {
     mainClassName = 'com.xiaoqu.git.log.extract.EntryPoint'
 } else {
