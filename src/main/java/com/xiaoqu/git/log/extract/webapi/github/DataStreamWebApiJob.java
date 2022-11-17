@@ -19,9 +19,8 @@ public class DataStreamWebApiJob {
                 .map(new WebApiMapper())
                 .map(new ProjectMapper())
                 .keyBy(CommitLog::getRepoName)
-                .addSink(new MysqlSink(config.getDb()))
-                .setParallelism(10);
+                .addSink(new MysqlSink(config.getDb()));
 
-        env.execute("Sync log to DB");
+        env.execute("Sync github log to DB");
     }
 }

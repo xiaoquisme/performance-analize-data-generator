@@ -14,8 +14,7 @@ public class JiraBoardJob {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         env.addSource(new JiraBoardSouce(jiraConfig))
-                .addSink(new JiraBoardSink())
-                .setParallelism(10);
+                .addSink(new JiraBoardSink());
 
         env.execute("sync jira board to db");
     }

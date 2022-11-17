@@ -11,8 +11,7 @@ public class JiraWorkLogJob {
         env.addSource(new JiraWorkLogSource(systemConfig.getDb()))
                 .flatMap(new JiraWorkLogFlow(systemConfig.getJira()))
                 .keyBy(item -> item.issueId)
-                .addSink(new JiraWorkLogSink(systemConfig.getDb()))
-                .setParallelism(10);
+                .addSink(new JiraWorkLogSink(systemConfig.getDb()));
         env.execute("sync jira worklog to db");
     }
 }

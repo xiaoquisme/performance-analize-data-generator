@@ -11,8 +11,7 @@ public class JiraIssueJob {
         env.addSource(new JiraIssueSource(config.getDb()))
                 .flatMap(new JiraIssueFlow(config.getJira()))
                 .keyBy(item -> item.fields.epic.id)
-                .addSink(new JiraIssueSink(config.getDb()))
-                .setParallelism(10);
+                .addSink(new JiraIssueSink(config.getDb()));
         env.execute("sync jira issue to db");
     }
 }

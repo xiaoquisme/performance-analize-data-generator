@@ -16,8 +16,7 @@ public class JiraEpicJob {
         stringDataStreamSource
                 .flatMap(new JiraEpicFlow(jiraConfig))
                 .keyBy(value -> value.boardId)
-                .addSink(new JiraEpicSink())
-                .setParallelism(10);
+                .addSink(new JiraEpicSink());
 
         env.execute("sync jira epic to db");
     }
