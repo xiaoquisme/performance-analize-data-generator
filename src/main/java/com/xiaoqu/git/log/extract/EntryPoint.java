@@ -12,7 +12,7 @@ public class EntryPoint {
 //        DataStreamWebApiJob.run();
 //        JiraBoardJob.run();
 //        JiraEpicJob.run();
-        JiraIssueJob.run();
-//        JiraWorkLogJob.run();
+//        JiraIssueJob.run();
+        JiraWorkLogJob.run();
     }
 }
