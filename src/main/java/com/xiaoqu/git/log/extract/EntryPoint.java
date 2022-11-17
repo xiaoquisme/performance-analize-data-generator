@@ -11,8 +11,8 @@ public class EntryPoint {
     public static void main(String[] args) throws Exception {
 //        DataStreamWebApiJob.run();
 //        JiraBoardJob.run();
-//        JiraEpicJob.run();
-        JiraIssueJob.run();
+        JiraEpicJob.run();
+//        JiraIssueJob.run();
 //        JiraWorkLogJob.run();
     }
 }
