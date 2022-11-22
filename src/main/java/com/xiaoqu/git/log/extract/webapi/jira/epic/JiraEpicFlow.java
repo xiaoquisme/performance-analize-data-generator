@@ -1,18 +1,16 @@
 package com.xiaoqu.git.log.extract.webapi.jira.epic;
 
 import com.xiaoqu.git.log.extract.common.SystemConfig;
+import com.xiaoqu.git.log.extract.webapi.jira.board.JiraBoardResponse;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.util.Collector;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequest;
 
-public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardDb, JiraEpic> {
+public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardResponse.JiraBoard, JiraEpic> {
     private SystemConfig.JiraConfig jiraConfig;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -22,7 +20,7 @@ public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardDb, JiraEpic> {
 
 
     @Override
-    public void flatMap(JiraBoardDb value, Collector<JiraEpic> out) throws Exception {
+    public void flatMap(JiraBoardResponse.JiraBoard value, Collector<JiraEpic> out) throws Exception {
         getJiraEpics(value.id)
                 .values
                 .stream()

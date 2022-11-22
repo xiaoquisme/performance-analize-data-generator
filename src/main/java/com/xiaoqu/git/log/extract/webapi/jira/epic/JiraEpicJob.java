@@ -13,10 +13,10 @@ public class JiraEpicJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         DataStreamSource<JiraBoardDb> stringDataStreamSource = env.addSource(new JiraEpicSource(config.getDb()));
-        stringDataStreamSource
-                .flatMap(new JiraEpicFlow(jiraConfig))
-                .keyBy(value -> value.boardId)
-                .addSink(new JiraEpicSink());
+//        stringDataStreamSource
+//                .flatMap(new JiraEpicFlow(jiraConfig))
+//                .keyBy(value -> value.boardId)
+//                .addSink(new JiraEpicSink());
 
         env.execute("sync jira epic to db");
     }

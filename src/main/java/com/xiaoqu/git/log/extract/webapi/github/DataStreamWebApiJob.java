@@ -16,10 +16,15 @@ public class DataStreamWebApiJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.addSource(new WebApiSource(repoOwner, repos, null))
+                .keyBy(item -> item.repoOwner)
                 .map(new WebApiMapper())
-                .map(new ProjectMapper())
+                .setParallelism(4)
                 .keyBy(CommitLog::getRepoName)
-                .addSink(new MysqlSink(config.getDb()));
+                .map(new ProjectMapper())
+                .setParallelism(4)
+                .keyBy(CommitLog::getRepoName)
+                .addSink(new MysqlSink(config.getDb()))
+                .setParallelism(4);
 
         env.execute("Sync github log to DB");
     }
