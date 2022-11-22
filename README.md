@@ -72,3 +72,6 @@ create table jira_worklog (
 
 ## jira docs
 https://docs.atlassian.com/jira-software/REST/7.3.1/
+
+## other notes
+flink need 30 task slots
