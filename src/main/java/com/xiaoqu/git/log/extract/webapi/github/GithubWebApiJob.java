@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.util.List;
 
-public class DataStreamWebApiJob {
+public class GithubWebApiJob {
 
     public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
@@ -16,15 +16,19 @@ public class DataStreamWebApiJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.addSource(new WebApiSource(repoOwner, repos, null))
+                .name("github source")
                 .keyBy(item -> item.repoOwner)
                 .map(new WebApiMapper())
-                .setParallelism(4)
+                .name("github response mapper")
+                .setParallelism(10)
                 .keyBy(CommitLog::getRepoName)
                 .map(new ProjectMapper())
-                .setParallelism(4)
+                .name("github project mapper")
+                .setParallelism(10)
                 .keyBy(CommitLog::getRepoName)
                 .addSink(new MysqlSink(config.getDb()))
-                .setParallelism(4);
+                .name("github mysql flow")
+                .setParallelism(10);
 
         env.execute("Sync github log to DB");
     }

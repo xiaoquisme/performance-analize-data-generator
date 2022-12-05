@@ -65,6 +65,14 @@ create table jira_worklog (
   created varchar(100) comment 'created',
   timeSpent varchar(100) comment 'timeSpent'
 );
+create table jira_sprint (
+  id bigint primary key ,
+  boardId bigint,
+  state varchar(100),
+  name varchar(100) comment 'updateAuthor.emailAddress',
+  goal varchar(1000) comment 'created'
+);
+
 ```
 
 ## github open api docs
