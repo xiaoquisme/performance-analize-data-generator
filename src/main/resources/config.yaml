@@ -4,6 +4,7 @@ db:
   password: "root"
   driver: "com.mysql.cj.jdbc.Driver"
 github:
+  basePath: "https://api.github.com"
   owner:
     name: "OWNER_NAME"
     repos:

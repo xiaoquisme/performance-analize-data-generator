@@ -5,19 +5,18 @@ import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-import java.util.List;
-
 public class GithubWebApiJob {
 
     public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
-        String repoOwner = config.getGithub().getOwner().getName();
-        List<String> repos = config.getGithub().getOwner().getRepos();
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.addSource(new WebApiSource(repoOwner, repos, null))
-                .name("github source")
-                .keyBy(item -> item.repoOwner)
+        env.addSource(new GithubOrgSource(config.getGithub()))
+                .name("github repo source")
+                .flatMap(new GithubRepoSource(config.getGithub(), null))
+                .name("github repo flatmap flow ")
+                .setParallelism(10)
+                .keyBy(item -> item.repoName)
                 .map(new WebApiMapper())
                 .name("github response mapper")
                 .setParallelism(10)

@@ -73,7 +73,9 @@ public class SystemConfig {
         }
     }
 
-    public static class GithubConfig {
+    public static class GithubConfig implements Serializable {
+        private static final long serialVersionUID = 3752097280889199314L;
+
         public String getToken() {
             return token;
         }
@@ -91,9 +93,21 @@ public class SystemConfig {
         }
 
         private String token;
+
+        private String basePath;
         private GithubOwner owner;
 
-        public static class GithubOwner {
+        public String getBasePath() {
+            return basePath;
+        }
+
+        public void setBasePath(String basePath) {
+            this.basePath = basePath;
+        }
+
+        public static class GithubOwner implements Serializable {
+
+            private static final long serialVersionUID = 4457842271792961820L;
             private String name;
             private List<String> repos;
 

@@ -1,5 +1,7 @@
 package com.xiaoqu.git.log.extract;
 
+import com.xiaoqu.git.log.extract.common.SystemConfig;
+import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import com.xiaoqu.git.log.extract.webapi.github.GithubWebApiJob;
 import com.xiaoqu.git.log.extract.webapi.jira.board.JiraBoardJob;
 

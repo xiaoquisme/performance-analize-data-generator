@@ -7,7 +7,7 @@ import org.apache.flink.util.Collector;
 
 import java.io.IOException;
 
-import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequest;
+import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequestBasic;
 
 public class JiraIssueFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
     private final SystemConfig.JiraConfig jiraConfig;
@@ -33,6 +33,6 @@ public class JiraIssueFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
 
     private JiraIssueResponse getIssues(JiraEpic jiraEpic, int startAt) throws IOException {
         String url = String.format("%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50", jiraConfig.getUrl(), jiraEpic.boardId, jiraEpic.id, startAt);
-        return sendRequest(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class);
+        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class);
     }
 }
