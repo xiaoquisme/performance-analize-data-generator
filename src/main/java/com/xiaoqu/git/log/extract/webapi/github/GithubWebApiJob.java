@@ -13,9 +13,10 @@ public class GithubWebApiJob {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.addSource(new GithubOrgSource(config.getGithub()))
                 .name("github repo source")
+                .keyBy(item -> item)
                 .flatMap(new GithubRepoSource(config.getGithub(), null))
                 .name("github repo flatmap flow ")
-                .setParallelism(10)
+                .setParallelism(20)
                 .keyBy(item -> item.repoName)
                 .map(new WebApiMapper())
                 .name("github response mapper")
