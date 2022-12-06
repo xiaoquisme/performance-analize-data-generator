@@ -47,7 +47,7 @@ public class JiraBoardJob {
                 .map(new JiraEpicSinkMap())
                 .name("jira epic sink map")
                 .setParallelism(5)
-                .flatMap(new JiraIssueFlow(config.getJira()))
+                .flatMap(new JiraIssueFlow(config.getJira(), "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
                 .name("jira issue flat map flow")
                 .setParallelism(10)
                 .keyBy(item -> item.fields.epic.id)

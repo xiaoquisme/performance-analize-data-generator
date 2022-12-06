@@ -11,16 +11,18 @@ import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequestBasic;
 
 public class JiraIssueFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
     private final SystemConfig.JiraConfig jiraConfig;
+    private final String requestPath;
 
-    public JiraIssueFlow(SystemConfig.JiraConfig jiraConfig) {
+    public JiraIssueFlow(SystemConfig.JiraConfig jiraConfig, String requestPath) {
         this.jiraConfig = jiraConfig;
+        this.requestPath = requestPath;
     }
 
     @Override
     public void flatMap(JiraEpic value, Collector<JiraIssue> ctx) throws Exception {
         int start = 0;
         while (true) {
-            JiraIssueResponse issues = getIssues(value, start);
+            JiraIssueResponse issues = getIssues(value, start, requestPath);
             if (!issues.hasNext()) {
                 break;
             } else {
@@ -31,8 +33,8 @@ public class JiraIssueFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
 
     }
 
-    private JiraIssueResponse getIssues(JiraEpic jiraEpic, int startAt) throws IOException {
-        String url = String.format("%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50", jiraConfig.getUrl(), jiraEpic.boardId, jiraEpic.id, startAt);
+    private JiraIssueResponse getIssues(JiraEpic jiraEpic, int startAt, String requestPath) throws IOException {
+        String url = String.format(requestPath, jiraConfig.getUrl(), jiraEpic.boardId, jiraEpic.id, startAt);
         return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class);
     }
 }
