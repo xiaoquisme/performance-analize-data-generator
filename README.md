@@ -82,4 +82,4 @@ create table jira_sprint (
 https://docs.atlassian.com/jira-software/REST/7.3.1/
 
 ## other notes
-flink need 30 task slots
+flink need 50 task slots
