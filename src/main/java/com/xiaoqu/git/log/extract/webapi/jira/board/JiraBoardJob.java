@@ -23,30 +23,16 @@ public class JiraBoardJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = env.addSource(new JiraBoardSouce(jiraConfig))
-                .name("read data from remote")
-                .keyBy(item -> item.id)
-                .map(new JiraBoardSinkMap())
-                .name("sink to db map");
+        SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env);
 
-        jiraBoardFlow
-                .setParallelism(4)
-                .keyBy(item -> item.id)
-                .flatMap(new JiraSprintFlow(jiraConfig))
-                .name("flat map jira sprint")
-                .setParallelism(4)
-                .keyBy(item -> item.id)
-                .map(new JIraSprintSinkMap(dbConfig))
-                .name("sink jira sprint")
-                .setParallelism(4)
-                .keyBy(item -> item.id)
-                .flatMap(new JiraIssueSprintFlow(jiraConfig, "%s/rest/agile/1.0/board/%s/sprint/%s/issue?startAt=%s&limit=50"))
-                .name("get jira issue from board")
-                .setParallelism(8)
-                .map(new JiraIssueSinkMap(dbConfig))
-                .name("sink jira issue")
-                .setParallelism(8);
+        jiraSprintFlow(config, dbConfig, jiraConfig, jiraBoardFlow);
 
+        jiraEpicFlow(config, dbConfig, jiraConfig, jiraBoardFlow);
+
+        env.execute("sync jira board to db");
+    }
+
+    private static void jiraEpicFlow(SystemConfig config, SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
         jiraBoardFlow
                 .setParallelism(4)
                 .keyBy(item -> item.id)
@@ -63,15 +49,43 @@ public class JiraBoardJob {
                 .keyBy(item -> item.fields.epic.id)
                 .map(new JiraIssueSinkMap(dbConfig))
                 .name("jira issue sink map flow")
+                .setParallelism(10);
+    }
+
+    private static void jiraSprintFlow(SystemConfig config, SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
+        jiraBoardFlow
                 .setParallelism(10)
+                .keyBy(item -> item.id)
+                .flatMap(new JiraSprintFlow(jiraConfig))
+                .name("flat map jira sprint")
+                .setParallelism(10)
+                .keyBy(item -> item.id)
+                .map(new JIraSprintSinkMap(dbConfig))
+                .name("sink jira sprint")
+                .setParallelism(10)
+                .keyBy(item -> item.id)
+                .flatMap(new JiraIssueSprintFlow(jiraConfig, "%s/rest/agile/1.0/board/%s/sprint/%s/issue?startAt=%s&limit=50"))
+                .name("get jira issue from board")
+                .setParallelism(20)
+                .keyBy(item -> item.id)
+                .map(new JiraIssueSinkMap(dbConfig))
+                .name("sink jira issue")
+                .setParallelism(20)
+                .keyBy(item -> item.id)
                 .flatMap(new JiraWorkLogFlow(config.getJira()))
                 .name("jira work log flat map flow")
                 .setParallelism(20)
-                .keyBy(item -> item.issueId)
+                .keyBy(item -> item.id)
                 .addSink(new JiraWorkLogSink(dbConfig))
                 .name("jira work log sink flow")
                 .setParallelism(20);
+    }
 
-        env.execute("sync jira board to db");
+    private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env) {
+        return env.addSource(new JiraBoardSouce(jiraConfig))
+                .name("read data from remote")
+                .keyBy(item -> item.id)
+                .map(new JiraBoardSinkMap())
+                .name("sink to db map");
     }
 }

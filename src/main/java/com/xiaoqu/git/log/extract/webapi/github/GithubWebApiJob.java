@@ -28,7 +28,7 @@ public class GithubWebApiJob {
                 .keyBy(CommitLog::getRepoName)
                 .addSink(new MysqlSink(config.getDb()))
                 .name("github mysql flow")
-                .setParallelism(10);
+                .setParallelism(20);
 
         env.execute("Sync github log to DB");
     }
