@@ -22,8 +22,8 @@ public class JiraIssueSink extends SinkBase<JiraIssue> {
     @Override
     public void invoke(JiraIssue value, Context context) throws Exception {
         preparedStatement.setString(1, value.id);
-        preparedStatement.setString(2, value.fields.epic.id);
-        preparedStatement.setString(3, value.fields.epic.key);
+        preparedStatement.setString(2, Optional.ofNullable(value.fields.epic).map(item -> item.id).orElse(null));
+        preparedStatement.setString(3, Optional.ofNullable(value.fields.epic).map(item -> item.key).orElse(null));
         preparedStatement.setString(4, value.key);
         preparedStatement.setString(5, value.getIssueType());
         preparedStatement.setString(6, value.fields.title);

@@ -9,11 +9,11 @@ import java.io.IOException;
 
 import static com.xiaoqu.git.log.extract.common.RequestUtils.sendRequestBasic;
 
-public class JiraIssueFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
+public class JiraIssueEpicFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> {
     private final SystemConfig.JiraConfig jiraConfig;
     private final String requestPath;
 
-    public JiraIssueFlow(SystemConfig.JiraConfig jiraConfig, String requestPath) {
+    public JiraIssueEpicFlow(SystemConfig.JiraConfig jiraConfig, String requestPath) {
         this.jiraConfig = jiraConfig;
         this.requestPath = requestPath;
     }
