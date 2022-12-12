@@ -51,7 +51,7 @@ create table jira_issue(
    title varchar(1000) comment 'summary',
    `discription` text comment 'description',
    timetracking_spent varchar(100),
-   story_pont varchar(100) comment  'customfield_10028',
+   story_point varchar(100) comment  'customfield_10028',
    current_sprint varchar(100) comment 'customfield_10020.name',
    `status` varchar(100) comment 'status.name',
    reporter varchar(100) comment 'reporter.emailAddress',
@@ -63,7 +63,7 @@ create table jira_worklog (
   updater_name varchar(100),
   update_author varchar(100) comment 'updateAuthor.emailAddress',
   created varchar(100) comment 'created',
-  timeSpent varchar(100) comment 'timeSpent'
+  time_spent varchar(100) comment 'timeSpent'
 );
 create table jira_sprint (
   id bigint primary key ,

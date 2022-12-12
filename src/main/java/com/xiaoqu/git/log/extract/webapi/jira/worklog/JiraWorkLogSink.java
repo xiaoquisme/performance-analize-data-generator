@@ -13,7 +13,7 @@ public class JiraWorkLogSink extends SinkBase<JiraWorkLog> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        String sql = "INSERT INTO performance_analyze.jira_worklog (id, issue_id, updater_name, update_author, created, timeSpent) VALUES (?, ?, ?, ?, ?, ?) on duplicate key update id = id;;";
+        String sql = "INSERT INTO performance_analyze.jira_worklog (id, issue_id, updater_name, update_author, created, time_spent) VALUES (?, ?, ?, ?, ?, ?) on duplicate key update id = id;;";
         prepare(sql, dbConfig);
     }
 
