@@ -28,6 +28,6 @@ public class JiraBoardSouce extends RichSourceFunction<JiraBoardResponse.JiraBoa
         String path = jiraConfig.getUrl() + "/rest/agile/1.0/board";
         String username = jiraConfig.getUsername();
         String password = jiraConfig.getPassword();
-        return RequestUtils.sendRequestBasic(path, username, password, JiraBoardResponse.class);
+        return RequestUtils.sendRequestBasic(path, username, password, JiraBoardResponse.class).orElse(new JiraBoardResponse());
     }
 }

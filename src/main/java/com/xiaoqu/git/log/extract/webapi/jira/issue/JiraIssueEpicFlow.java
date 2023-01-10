@@ -35,6 +35,6 @@ public class JiraIssueEpicFlow extends RichFlatMapFunction<JiraEpic, JiraIssue> 
 
     private JiraIssueResponse getIssues(JiraEpic jiraEpic, int startAt, String requestPath) throws IOException {
         String url = String.format(requestPath, jiraConfig.getUrl(), jiraEpic.boardId, jiraEpic.id, startAt);
-        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class);
+        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class).orElse(new JiraIssueResponse());
     }
 }

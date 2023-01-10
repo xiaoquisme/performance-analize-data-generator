@@ -21,7 +21,8 @@ public class EntryPoint {
 
     private static void trancuateJiraDB() throws SQLException, ClassNotFoundException {
         try(Connection dbConnection = getDbConnection(SystemConfigLoader.config.getDb())) {
-            List<String> list = Arrays.asList("truncate table jira_sprint;",
+            List<String> list = Arrays.asList(
+                    "truncate table jira_sprint;",
                     "truncate table jira_issue;",
                     "truncate table jira_worklog;",
                     "truncate table jira_board;",

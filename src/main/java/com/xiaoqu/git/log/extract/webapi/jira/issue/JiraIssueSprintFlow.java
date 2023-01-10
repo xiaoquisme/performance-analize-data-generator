@@ -35,6 +35,6 @@ public class JiraIssueSprintFlow extends RichFlatMapFunction<JiraSprintResponse.
 
     private JiraIssueResponse getIssues(JiraSprintResponse.JiraSprint jiraSprint, int startAt, String requestPath) throws IOException {
         String url = String.format(requestPath, jiraConfig.getUrl(), jiraSprint.boardId, jiraSprint.id, startAt);
-        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class);
+        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraIssueResponse.class).orElse(new JiraIssueResponse());
     }
 }
