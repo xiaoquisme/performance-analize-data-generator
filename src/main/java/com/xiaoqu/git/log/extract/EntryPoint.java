@@ -4,6 +4,8 @@ import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import com.xiaoqu.git.log.extract.webapi.github.GithubWebApiJob;
 import com.xiaoqu.git.log.extract.webapi.jira.board.JiraBoardJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,27 +15,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EntryPoint {
+    private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
+
     public static void main(String[] args) throws Exception {
-        trancuateJiraDB();
+        createJiraTable();
         GithubWebApiJob.run();
         JiraBoardJob.run();
     }
 
-    private static void trancuateJiraDB() throws SQLException, ClassNotFoundException {
-        try(Connection dbConnection = getDbConnection(SystemConfigLoader.config.getDb())) {
+    private static void createJiraTable() throws SQLException, ClassNotFoundException {
+        try (Connection dbConnection = getDbConnection(SystemConfigLoader.config.getDb())) {
             List<String> list = Arrays.asList(
-                    "truncate table jira_sprint;",
-                    "truncate table jira_issue;",
-                    "truncate table jira_worklog;",
-                    "truncate table jira_board;",
-                    "truncate table jira_epic;"
+                    "call create_jira_board(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
+                    "call create_jira_epic(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
+                    "call create_jira_sprint(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
+                    "call create_jira_issue(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
+                    "call create_jira_worklog(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));"
             );
             Statement statement = dbConnection.createStatement();
             list.forEach(sql -> {
-                try  {
+                try {
                     statement.executeUpdate(sql);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    logger.error("exec create jira table error{}.{}", sql, e.getMessage(), e);
                 }
             });
             statement.close();

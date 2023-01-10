@@ -27,12 +27,24 @@ create table performance_analyze.git_log
     commit_date varchar(100),
     commit_email varchar(100)
 );
-create table jira_board (
+
+CREATE PROCEDURE create_jira_board(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_board_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
     id bigint primary key ,
     name varchar(1000),
     `type` varchar(100)
-);
-create table jira_epic (
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
+CREATE PROCEDURE create_jira_epic(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_epic_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
    id bigint primary key ,
    `key` varchar(100),
    link varchar(1000),
@@ -40,38 +52,67 @@ create table jira_epic (
    summary varchar(1000),
    is_done bool,
    board_id bigint
-);
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
 
-create table jira_issue(
-   id bigint primary key,
-   epic_id bigint,
-   epic_key varchar(100) comment 'epic.key',
-   `key` varchar(100) comment 'key',
-   issue_type varchar(100) comment 'fields.issuetype.name',
-   title varchar(1000) comment 'summary',
-   `discription` text comment 'description',
-   timetracking_spent varchar(100),
-   story_point varchar(100) comment  'customfield_10028',
-   current_sprint varchar(100) comment 'customfield_10020.name',
-   `status` varchar(100) comment 'status.name',
-   reporter varchar(100) comment 'reporter.emailAddress',
-   assignee varchar(100) comment 'assignee.emailAddress'
-);
-create table jira_worklog (
-  id bigint primary key ,
-  issue_id bigint,
-  updater_name varchar(100),
-  update_author varchar(100) comment 'updateAuthor.emailAddress',
-  created varchar(100) comment 'created',
-  time_spent varchar(100) comment 'timeSpent'
-);
-create table jira_sprint (
+CREATE PROCEDURE create_jira_sprint(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_sprint_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
   id bigint primary key ,
   boardId bigint,
   state varchar(100),
-  name varchar(100) comment 'updateAuthor.emailAddress',
-  goal varchar(1000) comment 'created'
-);
+  name varchar(100) comment ''updateAuthor.emailAddress'',
+  goal varchar(1000) comment ''created''
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
+
+CREATE PROCEDURE create_jira_issue(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_issue_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
+   id bigint primary key,
+   epic_id bigint,
+   epic_key varchar(100) comment ''epic.key'',
+   `key` varchar(100) comment ''key'',
+   issue_type varchar(100) comment ''fields.issuetype.name'',
+   title varchar(1000) comment ''summary'',
+   `discription` text comment ''description'',
+   timetracking_spent varchar(100),
+   story_point varchar(100) comment  ''customfield_10028'',
+   current_sprint varchar(100) comment ''customfield_10020.name'',
+   `status` varchar(100) comment ''status.name'',
+   reporter varchar(100) comment ''reporter.emailAddress'',
+   assignee varchar(100) comment ''assignee.emailAddress''
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
+CREATE PROCEDURE create_jira_worklog(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_worklog_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
+  id bigint primary key ,
+  issue_id bigint,
+  updater_name varchar(100),
+  update_author varchar(100) comment ''updateAuthor.emailAddress'',
+  created varchar(100) comment ''created'',
+  time_spent varchar(100) comment ''timeSpent''
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
 
 ```
 
