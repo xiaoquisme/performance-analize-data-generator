@@ -2,15 +2,15 @@ package com.xiaoqu.git.log.extract.webapi.jira.board;
 
 import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
-import com.xiaoqu.git.log.extract.webapi.jira.epic.JiraEpicFlow;
-import com.xiaoqu.git.log.extract.webapi.jira.epic.JiraEpicSinkMap;
-import com.xiaoqu.git.log.extract.webapi.jira.issue.JiraIssueSprintFlow;
-import com.xiaoqu.git.log.extract.webapi.jira.issue.JiraIssueEpicFlow;
-import com.xiaoqu.git.log.extract.webapi.jira.issue.JiraIssueSinkMap;
-import com.xiaoqu.git.log.extract.webapi.jira.sprint.JIraSprintSinkMap;
-import com.xiaoqu.git.log.extract.webapi.jira.sprint.JiraSprintFlow;
-import com.xiaoqu.git.log.extract.webapi.jira.worklog.JiraWorkLogFlow;
-import com.xiaoqu.git.log.extract.webapi.jira.worklog.JiraWorkLogSink;
+import com.xiaoqu.git.log.extract.webapi.jira.board.epic.JiraEpicFlow;
+import com.xiaoqu.git.log.extract.webapi.jira.board.epic.JiraEpicSinkMap;
+import com.xiaoqu.git.log.extract.webapi.jira.board.issue.JiraIssueSprintFlow;
+import com.xiaoqu.git.log.extract.webapi.jira.board.issue.JiraIssueEpicFlow;
+import com.xiaoqu.git.log.extract.webapi.jira.board.issue.JiraIssueSinkMap;
+import com.xiaoqu.git.log.extract.webapi.jira.board.sprint.JIraSprintSinkMap;
+import com.xiaoqu.git.log.extract.webapi.jira.board.sprint.JiraSprintFlow;
+import com.xiaoqu.git.log.extract.webapi.jira.board.issue.worklog.JiraWorkLogFlow;
+import com.xiaoqu.git.log.extract.webapi.jira.board.issue.worklog.JiraWorkLogSink;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 

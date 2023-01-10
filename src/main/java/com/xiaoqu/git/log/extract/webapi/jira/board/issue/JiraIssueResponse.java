@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract.webapi.jira.issue;
+package com.xiaoqu.git.log.extract.webapi.jira.board.issue;
 
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

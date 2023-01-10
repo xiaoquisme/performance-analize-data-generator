@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract.webapi.jira.sprint;
+package com.xiaoqu.git.log.extract.webapi.jira.board.sprint;
 
 import com.xiaoqu.git.log.extract.common.SinkBase;
 import com.xiaoqu.git.log.extract.common.SystemConfig;

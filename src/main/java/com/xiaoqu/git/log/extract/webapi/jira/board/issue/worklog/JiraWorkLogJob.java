@@ -1,4 +1,4 @@
-package com.xiaoqu.git.log.extract.webapi.jira.worklog;
+package com.xiaoqu.git.log.extract.webapi.jira.board.issue.worklog;
 
 import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;

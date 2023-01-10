@@ -1,7 +1,7 @@
-package com.xiaoqu.git.log.extract.webapi.jira.issue;
+package com.xiaoqu.git.log.extract.webapi.jira.board.issue;
 
 import com.xiaoqu.git.log.extract.common.SystemConfig;
-import com.xiaoqu.git.log.extract.webapi.jira.sprint.JiraSprintResponse;
+import com.xiaoqu.git.log.extract.webapi.jira.board.sprint.JiraSprintResponse;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.util.Collector;
 
