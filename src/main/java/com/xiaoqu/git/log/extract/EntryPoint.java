@@ -1,5 +1,6 @@
 package com.xiaoqu.git.log.extract;
 
+import com.xiaoqu.git.log.extract.common.DatetimeUtils;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import com.xiaoqu.git.log.extract.webapi.github.GithubWebApiJob;
@@ -18,19 +19,20 @@ public class EntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
     public static void main(String[] args) throws Exception {
-        createJiraTable();
+        String currentDay = DatetimeUtils.currentDay;
+        createJiraTable(currentDay);
         GithubWebApiJob.run();
         JiraBoardJob.run();
     }
 
-    private static void createJiraTable() throws SQLException, ClassNotFoundException {
+    private static void createJiraTable(String currentDay) throws SQLException, ClassNotFoundException {
         try (Connection dbConnection = getDbConnection(SystemConfigLoader.config.getDb())) {
             List<String> list = Arrays.asList(
-                    "call create_jira_board(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
-                    "call create_jira_epic(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
-                    "call create_jira_sprint(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
-                    "call create_jira_issue(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));",
-                    "call create_jira_worklog(DATE_FORMAT(CURDATE(), '%Y_%m_%d'));"
+                    String.format("call create_jira_board('%s');", currentDay),
+                    String.format("call create_jira_epic('%s');", currentDay),
+                    String.format("call create_jira_sprint('%s');", currentDay),
+                    String.format("call create_jira_issue('%s');", currentDay),
+                    String.format("call create_jira_worklog('%s');", currentDay)
             );
             Statement statement = dbConnection.createStatement();
             list.forEach(sql -> {
