@@ -23,7 +23,7 @@ public class JiraBoardJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env);
+        SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env, dbConfig);
 
         jiraSprintFlow(config, dbConfig, jiraConfig, jiraBoardFlow);
 
@@ -40,7 +40,7 @@ public class JiraBoardJob {
                 .name("jira epic flat map flow")
                 .setParallelism(4)
                 .keyBy(value -> value.boardId)
-                .map(new JiraEpicSinkMap())
+                .map(new JiraEpicSinkMap(dbConfig))
                 .name("jira epic sink map")
                 .setParallelism(5)
                 .flatMap(new JiraIssueEpicFlow(config.getJira(), "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
@@ -81,11 +81,11 @@ public class JiraBoardJob {
                 .setParallelism(20);
     }
 
-    private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env) {
+    private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env, SystemConfig.DatabaseConfig dbConfig) {
         return env.addSource(new JiraBoardSouce(jiraConfig))
                 .name("read data from remote")
                 .keyBy(item -> item.id)
-                .map(new JiraBoardSinkMap())
+                .map(new JiraBoardSinkMap(dbConfig))
                 .name("sink to db map");
     }
 }
