@@ -15,7 +15,8 @@ public class JiraIssueSink extends SinkBase<JiraIssue> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        String sql = "INSERT INTO performance_analyze.jira_issue (id, epic_id, epic_key, `key`, issue_type, title, discription, timetracking_spent, story_point, current_sprint, status, reporter, assignee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on duplicate key update id = id;";
+        String table = getTableName("jira_issue");
+        String sql = String.format("INSERT INTO %s(id, epic_id, epic_key, `key`, issue_type, title, discription, timetracking_spent, story_point, current_sprint, status, reporter, assignee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on duplicate key update id = id;", table);
         prepare(sql, dbConfig);
     }
 
@@ -30,10 +31,10 @@ public class JiraIssueSink extends SinkBase<JiraIssue> {
         preparedStatement.setString(7, value.fields.description);
         preparedStatement.setString(8, value.fields.timetracking.timeTrackingSpent);
         preparedStatement.setString(9, value.getStoryPoint());
-        preparedStatement.setString(10, Optional.ofNullable( value.fields.sprint).map(item -> item.currentSprint).orElse(null));
+        preparedStatement.setString(10, Optional.ofNullable(value.fields.sprint).map(item -> item.currentSprint).orElse(null));
         preparedStatement.setString(11, value.fields.status.name);
         preparedStatement.setString(12, value.fields.reporter.email);
-        preparedStatement.setString(13, Optional.ofNullable( value.fields.assignee).map(item -> item.email).orElse(null));
+        preparedStatement.setString(13, Optional.ofNullable(value.fields.assignee).map(item -> item.email).orElse(null));
         preparedStatement.execute();
     }
 }

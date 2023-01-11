@@ -13,7 +13,8 @@ public class JiraBoardSink extends SinkBase<JiraBoardResponse.JiraBoard> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        String sql = "insert into jira_board(id,name, type)values(?,?,?) on duplicate key update id = id;";
+        String tableName = getTableName("jira_board");
+        String sql = String.format("insert into %s(id,name, type)values(?,?,?) on duplicate key update id = id;", tableName);
         prepare(sql, dbConfig);
     }
 
