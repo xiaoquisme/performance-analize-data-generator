@@ -1,43 +1,22 @@
 package com.xiaoqu.git.log.extract.webapi.jira.board.epic;
 
+import com.xiaoqu.git.log.extract.common.SinkBase;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
-import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class JiraEpicSink extends RichSinkFunction<JiraEpic> {
-    private Connection connection = null;
-    private PreparedStatement preparedStatement = null;
+public class JiraEpicSink extends SinkBase<JiraEpic> {
+    private final SystemConfig.DatabaseConfig dbConfig;
+
+    public JiraEpicSink(SystemConfig.DatabaseConfig config) {
+        dbConfig = config;
+    }
+
     @Override
     public void open(Configuration parameters) throws Exception {
-        extracted("insert into jira_epic(id, `key`, link, name, summary, is_done, board_id)values(?,?,?,?,?,?,?) on duplicate key update id = id;", SystemConfigLoader.config.getDb());
-    }
-
-    private void extracted(String sql, SystemConfig.DatabaseConfig dbConfig) throws ClassNotFoundException, SQLException {
-        String driver = dbConfig.getDriver();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
-        Class.forName(driver);
-
-        connection = DriverManager.getConnection(url, username, password);
-        preparedStatement = connection.prepareStatement(sql);
-    }
-
-    @Override
-    public void close() throws Exception {
-        if (connection != null) {
-            connection.close();
-        }
-        if (preparedStatement != null) {
-            preparedStatement.close();
-        }
-        super.close();
+        String sql = "insert into jira_epic(id, `key`, link, name, summary, is_done, board_id)values(?,?,?,?,?,?,?) on duplicate key update id = id;";
+        prepare(sql, dbConfig);
     }
 
     @Override

@@ -15,27 +15,25 @@ public class MysqlSink extends SinkBase<CommitLog> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-
         String sql = "insert into git_log(id,repo_owner,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?,?) on duplicate key update id = id;";
         prepare(sql,dbConfig);
     }
 
     @Override
     public void invoke(CommitLog value, Context context) throws Exception {
-        CommitLog value1 = value;
         try {
-            preparedStatement.setString(1, value1.getCommitId());
-            preparedStatement.setString(2, value1.getRepoOwner());
-            preparedStatement.setString(3, value1.getRepoName());
-            preparedStatement.setString(4, value1.getJiraNo());
-            preparedStatement.setString(5, value1.getMessage());
-            preparedStatement.setString(6, value1.getUserName());
-            preparedStatement.setString(7, value1.getCommitDate());
-            preparedStatement.setString(8, value1.getCommitEmail());
+            preparedStatement.setString(1, value.getCommitId());
+            preparedStatement.setString(2, value.getRepoOwner());
+            preparedStatement.setString(3, value.getRepoName());
+            preparedStatement.setString(4, value.getJiraNo());
+            preparedStatement.setString(5, value.getMessage());
+            preparedStatement.setString(6, value.getUserName());
+            preparedStatement.setString(7, value.getCommitDate());
+            preparedStatement.setString(8, value.getCommitEmail());
             preparedStatement.execute();
         } catch (Exception e) {
             System.out.println(e);
-            System.out.printf("===============================================%s", value1);
+            System.out.printf("===============================================%s", value);
         }
 
     }
