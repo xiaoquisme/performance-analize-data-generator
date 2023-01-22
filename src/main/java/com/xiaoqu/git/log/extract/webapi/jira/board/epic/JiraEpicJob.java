@@ -9,10 +9,10 @@ public class JiraEpicJob {
 
     public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
-        SystemConfig.JiraConfig jiraConfig = config.getJira();
+        SystemConfig.JiraConfig jiraConfig = config.jiras;
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        DataStreamSource<JiraBoardDb> stringDataStreamSource = env.addSource(new JiraEpicSource(config.getDb()));
+        DataStreamSource<JiraBoardDb> stringDataStreamSource = env.addSource(new JiraEpicSource(config.db));
 //        stringDataStreamSource
 //                .flatMap(new JiraEpicFlow(jiraConfig))
 //                .keyBy(value -> value.boardId)

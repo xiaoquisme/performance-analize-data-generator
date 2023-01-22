@@ -27,17 +27,17 @@ public class GithubOrgSource extends RichSourceFunction<String> {
     }
 
     private List<String> getGithubRepos() throws IOException {
-        List<String> repos = this.githubConfig.getOwner().getRepos();
+        List<String> repos = this.githubConfig.owner.repos;
         if (Objects.isNull(repos) || repos.isEmpty()) {
-            List<GithubRepo> repoList = getRepos(githubConfig.getOwner().getName());
+            List<GithubRepo> repoList = getRepos(githubConfig.owner.name);
             repos = repoList.stream().map(item -> item.name).collect(Collectors.toList());
         }
         return repos;
     }
 
     private List<GithubRepo> getRepos(String orgName) throws IOException {
-        String url = String.format(githubConfig.getBasePath() + "/orgs/%s/repos?per_page=100", orgName);
-        return RequestUtils.sendRequestBearer(url, SystemConfigLoader.config.getGithub().getToken(), new TypeReference<List<GithubRepo>>() {});
+        String url = String.format(githubConfig.basePath + "/orgs/%s/repos?per_page=100", orgName);
+        return RequestUtils.sendRequestBearer(url, SystemConfigLoader.config.github.token, new TypeReference<List<GithubRepo>>() {});
     }
 
     @Override

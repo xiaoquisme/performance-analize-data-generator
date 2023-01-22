@@ -26,7 +26,7 @@ public class EntryPoint {
     }
 
     private static void createJiraTable(String currentDay) throws SQLException, ClassNotFoundException {
-        try (Connection dbConnection = getDbConnection(SystemConfigLoader.config.getDb())) {
+        try (Connection dbConnection = getDbConnection(SystemConfigLoader.config.db)) {
             List<String> list = Arrays.asList(
                     String.format("call create_jira_board('%s');", currentDay),
                     String.format("call create_jira_epic('%s');", currentDay),
@@ -47,10 +47,10 @@ public class EntryPoint {
     }
 
     private static Connection getDbConnection(SystemConfig.DatabaseConfig dbConfig) throws ClassNotFoundException, SQLException {
-        String driver = dbConfig.getDriver();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
+        String driver = dbConfig.driver;
+        String url = dbConfig.url;
+        String username = dbConfig.username;
+        String password = dbConfig.password;
         Class.forName(driver);
 
         return DriverManager.getConnection(url, username, password);

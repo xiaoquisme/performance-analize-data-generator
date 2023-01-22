@@ -18,10 +18,10 @@ public class JiraEpicSource extends RichSourceFunction<JiraBoardDb> {
 
     @Override
     public void run(SourceContext<JiraBoardDb> ctx) throws Exception {
-        String driver = dbConfig.getDriver();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
+        String driver = dbConfig.driver;
+        String url = dbConfig.url;
+        String username = dbConfig.username;
+        String password = dbConfig.password;
         Class.forName(driver);
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             Statement statement = connection.createStatement();

@@ -18,9 +18,9 @@ public class GithubRepoSource extends RichFlatMapFunction<String, GitResponseCon
 
     public GithubRepoSource(SystemConfig.GithubConfig githubConfig, String since) {
         this.githubConfig = githubConfig;
-        String name = githubConfig.getOwner().getName();
+        String name = githubConfig.owner.name;
         if (since == null) {
-            path.append(githubConfig.getBasePath())
+            path.append(githubConfig.basePath)
                     .append("/repos")
                     .append("/" + name)
                     .append("/%s")
@@ -28,7 +28,7 @@ public class GithubRepoSource extends RichFlatMapFunction<String, GitResponseCon
                     .append("?perPage=100")
                     .append("&page=%s");
         } else {
-            path.append(githubConfig.getBasePath())
+            path.append(githubConfig.basePath)
                     .append("/repos")
                     .append("/" + name)
                     .append("/%s")
@@ -43,7 +43,7 @@ public class GithubRepoSource extends RichFlatMapFunction<String, GitResponseCon
         int pageCounter = 1;
         while (true) {
             String newPath = String.format(path.toString(), repo, pageCounter++);
-            List<GitResponseContext> response = getGitRepoReponse(newPath, SystemConfigLoader.config.getGithub().getToken());
+            List<GitResponseContext> response = getGitRepoReponse(newPath, SystemConfigLoader.config.github.token);
             if (response.isEmpty()) {
                 break;
             }

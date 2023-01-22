@@ -21,7 +21,7 @@ public class JiraWorkLogFlow extends RichFlatMapFunction<JiraIssue, JiraWorkLog>
         jiraWorkLogResponse.workLogs.forEach(out::collect);
     }
     private JiraWorkLogResponse getJiraWorkLog (String issueId) throws IOException {
-        String path = String.format("%s/rest/api/3/issue/%s/worklog", jiraConfig.getUrl(), issueId);
-        return RequestUtils.sendRequestBasic(path, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraWorkLogResponse.class).orElse(new JiraWorkLogResponse());
+        String path = String.format("%s/rest/api/3/issue/%s/worklog", jiraConfig.url, issueId);
+        return RequestUtils.sendRequestBasic(path, jiraConfig.username, jiraConfig.password, JiraWorkLogResponse.class).orElse(new JiraWorkLogResponse());
     }
 }

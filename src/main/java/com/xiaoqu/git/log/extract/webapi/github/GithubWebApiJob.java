@@ -11,10 +11,10 @@ public class GithubWebApiJob {
         SystemConfig config = SystemConfigLoader.config;
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.addSource(new GithubOrgSource(config.getGithub()))
+        env.addSource(new GithubOrgSource(config.github))
                 .name("github repo source")
                 .keyBy(item -> item)
-                .flatMap(new GithubRepoSource(config.getGithub(), null))
+                .flatMap(new GithubRepoSource(config.github, null))
                 .name("github repo flatmap flow ")
                 .setParallelism(20)
                 .keyBy(item -> item.repoName)
@@ -26,7 +26,7 @@ public class GithubWebApiJob {
                 .name("github project mapper")
                 .setParallelism(10)
                 .keyBy(CommitLog::getRepoName)
-                .addSink(new MysqlSink(config.getDb()))
+                .addSink(new MysqlSink(config.db))
                 .name("github mysql flow")
                 .setParallelism(20);
 

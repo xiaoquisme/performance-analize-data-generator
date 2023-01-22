@@ -12,10 +12,10 @@ public abstract class SinkBase<T> extends RichSinkFunction<T> {
     protected PreparedStatement preparedStatement = null;
 
     protected void prepare(String sql, SystemConfig.DatabaseConfig dbConfig) throws ClassNotFoundException, SQLException {
-        String driver = dbConfig.getDriver();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
+        String driver = dbConfig.driver;
+        String url = dbConfig.url;
+        String username = dbConfig.username;
+        String password = dbConfig.password;
         Class.forName(driver);
 
         connection = DriverManager.getConnection(url, username, password);

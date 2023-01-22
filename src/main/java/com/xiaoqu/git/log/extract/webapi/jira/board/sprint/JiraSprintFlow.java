@@ -29,7 +29,7 @@ public class JiraSprintFlow extends RichFlatMapFunction<JiraBoardResponse.JiraBo
     }
 
     private JiraSprintResponse getJiraResponse(String boardId) throws IOException {
-        String url = String.format("%s/rest/agile/1.0/board/%s/sprint", jiraConfig.getUrl(), boardId);
-        return sendRequestBasic(url, jiraConfig.getUsername(), jiraConfig.getPassword(), JiraSprintResponse.class).orElse(new JiraSprintResponse());
+        String url = String.format("%s/rest/agile/1.0/board/%s/sprint", jiraConfig.url, boardId);
+        return sendRequestBasic(url, jiraConfig.username, jiraConfig.password, JiraSprintResponse.class).orElse(new JiraSprintResponse());
     }
 }
