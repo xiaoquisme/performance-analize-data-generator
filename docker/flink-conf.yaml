@@ -30,13 +30,13 @@
 # automatically configure the host name based on the hostname of the node where the
 # JobManager runs.
 
-jobmanager.rpc.address: localhost
+jobmanager.rpc.address: 0.0.0.0
 
 # The RPC port where the JobManager is reachable.
 
 jobmanager.rpc.port: 6123
 
-# The host interface the JobManager will bind to. By default, this is localhost, and will prevent
+# The host interface the JobManager will bind to. My default, this is localhost, and will prevent
 # the JobManager from communicating outside the machine/container it is running on.
 # On YARN this setting will be ignored if it is set to 'localhost', defaulting to 0.0.0.0.
 # On Kubernetes this setting will be ignored, defaulting to 0.0.0.0.
@@ -44,14 +44,14 @@ jobmanager.rpc.port: 6123
 # To enable this, set the bind-host address to one that has access to an outside facing network
 # interface, such as 0.0.0.0.
 
-jobmanager.bind-host: localhost
+jobmanager.bind-host: 0.0.0.0
 
 
 # The total process memory size for the JobManager.
 #
 # Note this accounts for all memory usage within the JobManager process, including JVM metaspace and other overhead.
 
-jobmanager.memory.process.size: 10240m
+jobmanager.memory.process.size: 2048m
 
 # The host interface the TaskManager will bind to. By default, this is localhost, and will prevent
 # the TaskManager from communicating outside the machine/container it is running on.
@@ -61,7 +61,7 @@ jobmanager.memory.process.size: 10240m
 # To enable this, set the bind-host address to one that has access to an outside facing network
 # interface, such as 0.0.0.0.
 
-taskmanager.bind-host: localhost
+taskmanager.bind-host: 0.0.0.0
 
 # The address of the host on which the TaskManager runs and can be reached by the JobManager and
 # other TaskManagers. If not specified, the TaskManager will try different strategies to identify
@@ -73,26 +73,28 @@ taskmanager.bind-host: localhost
 # Note also that unless all TaskManagers are running on the same machine, this address needs to be
 # configured separately for each TaskManager.
 
-taskmanager.host: localhost
+taskmanager.host: 0.0.0.0
 
 # The total process memory size for the TaskManager.
 #
 # Note this accounts for all memory usage within the TaskManager process, including JVM metaspace and other overhead.
 
-taskmanager.memory.process.size: 10240m
 
+# taskmanager.memory.flink.size: 10240m
+# taskmanager.memory.process.size: 1024m	
 # To exclude JVM metaspace and overhead, please, use total Flink memory size instead of 'taskmanager.memory.process.size'.
 # It is not recommended to set both 'taskmanager.memory.process.size' and Flink memory.
 #
-# taskmanager.memory.flink.size: 1280m
+
+taskmanager.memory.flink.size: 2048m
 
 # The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.
 
-taskmanager.numberOfTaskSlots: 10
+taskmanager.numberOfTaskSlots: 100
 
 # The parallelism used for programs that did not specify and other parallelism.
 
-parallelism.default: 10
+parallelism.default: 1
 
 # The default file system scheme and authority.
 # 
@@ -187,11 +189,11 @@ rest.port: 8081
 
 # The address to which the REST client will connect to
 #
-rest.address: localhost
+rest.address: 0.0.0.0
 
 # Port range for the REST and web server to bind to.
 #
-#rest.bind-port: 8080-8090
+rest.bind-port: 8081
 
 # The address that the REST & web server binds to
 # By default, this is localhost, which prevents the REST & web server from
@@ -200,7 +202,7 @@ rest.address: localhost
 # To enable this, set the bind address to one that has access to outside-facing
 # network interface, such as 0.0.0.0.
 #
-rest.bind-address: localhost
+rest.bind-address: 0.0.0.0
 
 # Flag to specify whether job submission is enabled from the web-based
 # runtime monitor. Uncomment to disable.
@@ -233,6 +235,7 @@ rest.bind-address: localhost
 #
 # io.tmp.dirs: /tmp
 
+env.java.home: /home/xiaoqu/.jabba/jdk/graalvm-ce-java8@21.1.0
 # The classloading resolve order. Possible values are 'child-first' (Flink's default)
 # and 'parent-first' (Java's default).
 #
@@ -246,9 +249,10 @@ rest.bind-address: localhost
 # no tuning. Adjusting them may be necessary in case of an "Insufficient number
 # of network buffers" error. The default min is 64MB, the default max is 1GB.
 # 
-taskmanager.memory.network.fraction: 0.1
-taskmanager.memory.network.min: 64mb
-taskmanager.memory.network.max: 4gb
+taskmanager.memory.network.fraction: 0.3
+taskmanager.memory.network.min: 128mb
+taskmanager.memory.network.max: 2gb
+taskmanager.network.numberOfBuffers: 300mb
 
 #==============================================================================
 # Flink Cluster Security Configuration
