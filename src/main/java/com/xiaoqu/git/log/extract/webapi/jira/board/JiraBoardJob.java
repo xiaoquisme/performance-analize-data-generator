@@ -14,25 +14,26 @@ import com.xiaoqu.git.log.extract.webapi.jira.board.issue.worklog.JiraWorkLogSin
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+import java.util.List;
+
 public class JiraBoardJob {
 
     public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
         SystemConfig.DatabaseConfig dbConfig = config.db;
-        SystemConfig.JiraConfig jiraConfig = config.jiras;
+        List<SystemConfig.JiraConfig> jiraConfigs = config.jiras;
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-        SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env, dbConfig);
-
-        jiraSprintFlow(config, dbConfig, jiraConfig, jiraBoardFlow);
-
-        jiraEpicFlow(config, dbConfig, jiraConfig, jiraBoardFlow);
+        for (SystemConfig.JiraConfig jiraConfig: jiraConfigs) {
+            SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env, dbConfig);
+            jiraSprintFlow(dbConfig, jiraConfig, jiraBoardFlow);
+            jiraEpicFlow(dbConfig, jiraConfig, jiraBoardFlow);
+        }
 
         env.execute("sync jira board to db");
     }
 
-    private static void jiraEpicFlow(SystemConfig config, SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
+    private static void jiraEpicFlow(SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
         jiraBoardFlow
                 .setParallelism(4)
                 .keyBy(item -> item.id)
@@ -43,7 +44,7 @@ public class JiraBoardJob {
                 .map(new JiraEpicSinkMap(dbConfig))
                 .name("jira epic sink map")
                 .setParallelism(5)
-                .flatMap(new JiraIssueEpicFlow(config.jiras, "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
+                .flatMap(new JiraIssueEpicFlow(jiraConfig, "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
                 .name("jira issue flat map flow")
                 .setParallelism(10)
                 .keyBy(item -> item.fields.epic.id)
@@ -52,7 +53,7 @@ public class JiraBoardJob {
                 .setParallelism(10);
     }
 
-    private static void jiraSprintFlow(SystemConfig config, SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
+    private static void jiraSprintFlow(SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
         jiraBoardFlow
                 .setParallelism(10)
                 .keyBy(item -> item.id)
@@ -72,7 +73,7 @@ public class JiraBoardJob {
                 .name("sink jira issue")
                 .setParallelism(20)
                 .keyBy(item -> item.id)
-                .flatMap(new JiraWorkLogFlow(config.jiras))
+                .flatMap(new JiraWorkLogFlow(jiraConfig))
                 .name("jira work log flat map flow")
                 .setParallelism(20)
                 .keyBy(item -> item.id)

@@ -7,11 +7,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 public class JiraIssueJob {
     public static void run() throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        SystemConfig config = SystemConfigLoader.config;
-        env.addSource(new JiraIssueSource(config.db))
-                .flatMap(new JiraIssueEpicFlow(config.jiras, "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
-                .keyBy(item -> item.fields.epic.id)
-                .addSink(new JiraIssueSink(config.db));
+//        SystemConfig config = SystemConfigLoader.config;
+//        env.addSource(new JiraIssueSource(config.db))
+//                .flatMap(new JiraIssueEpicFlow(config.jiras, "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
+//                .keyBy(item -> item.fields.epic.id)
+//                .addSink(new JiraIssueSink(config.db));
         env.execute("sync jira issue to db");
     }
 }

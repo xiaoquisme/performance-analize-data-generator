@@ -9,7 +9,12 @@ github:
     name: "OWNER_NAME"
     repos:
   token: "<TOKEN>"
-jira:
-  url : "https://XXX.atlassian.net"
-  username: ""
-  password: ""
+jiras:
+  -
+    url: "https://xxx.atlassian.net"
+    username: ""
+    password: ""
+  -
+    url: "https://<self-hosted-jira>.com.cn"
+    username: ""
+    password: ""

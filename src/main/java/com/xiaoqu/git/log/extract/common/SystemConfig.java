@@ -6,7 +6,7 @@ import java.util.List;
 public class SystemConfig {
     public DatabaseConfig  db;
     public GithubConfig github;
-    public JiraConfig jiras;
+    public List<JiraConfig> jiras;
 
     public static class DatabaseConfig implements Serializable {
         private static final long serialVersionUID = -1082413991501913743L;
