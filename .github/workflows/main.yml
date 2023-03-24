@@ -5,7 +5,8 @@ permissions: write-all
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-
+  push:
+    branches: [ "master" ]
 jobs:
   test:
     runs-on: ubuntu
