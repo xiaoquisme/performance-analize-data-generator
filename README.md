@@ -1,4 +1,4 @@
-A git log extracter tools
+A git log extracter tools base flink.
 
 project template create from [flink](https://nightlies.apache.org/flink/flink-docs-release-1.10/dev/projectsetup/java_api_quickstart.html#gradle):
 ```bash
