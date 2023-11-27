@@ -13,8 +13,8 @@ jiras:
   -
     url: "https://xxx.atlassian.net"
     username: ""
-    password: ""
+    token: ""
   -
     url: "https://<self-hosted-jira>.com.cn"
     username: ""
-    password: ""
+    token: ""

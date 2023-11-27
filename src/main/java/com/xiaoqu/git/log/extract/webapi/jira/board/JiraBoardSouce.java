@@ -27,7 +27,7 @@ public class JiraBoardSouce extends RichSourceFunction<JiraBoardResponse.JiraBoa
     private JiraBoardResponse getBoard() throws IOException {
         String path = jiraConfig.url + "/rest/agile/1.0/board";
         String username = jiraConfig.username;
-        String password = jiraConfig.password;
+        String password = jiraConfig.token;
         return RequestUtils.sendRequestBasic(path, username, password, JiraBoardResponse.class).orElse(new JiraBoardResponse());
     }
 }

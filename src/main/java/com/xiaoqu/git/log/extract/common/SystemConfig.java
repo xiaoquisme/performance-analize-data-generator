@@ -32,7 +32,7 @@ public class SystemConfig {
     public static class JiraConfig implements Serializable {
         private static final long serialVersionUID = 1767925853714527170L;
         public String username;
-        public String password;
+        public String token;
         public String url;
         public List<String> projects;
     }

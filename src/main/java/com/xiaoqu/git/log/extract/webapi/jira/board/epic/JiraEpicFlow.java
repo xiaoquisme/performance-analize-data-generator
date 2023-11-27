@@ -33,6 +33,6 @@ public class JiraEpicFlow extends RichFlatMapFunction<JiraBoardResponse.JiraBoar
 
     private JiraEpicResponse getJiraEpics(String boardId) throws IOException {
         String url = String.format("%s/rest/agile/1.0/board/%s/epic", jiraConfig.url, boardId);
-        return sendRequestBasic(url, jiraConfig.username, jiraConfig.password, JiraEpicResponse.class).orElse(new JiraEpicResponse());
+        return sendRequestBasic(url, jiraConfig.username, jiraConfig.token, JiraEpicResponse.class).orElse(new JiraEpicResponse());
     }
 }
