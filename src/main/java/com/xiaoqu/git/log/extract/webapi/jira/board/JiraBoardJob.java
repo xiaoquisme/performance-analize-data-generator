@@ -1,5 +1,6 @@
 package com.xiaoqu.git.log.extract.webapi.jira.board;
 
+import com.xiaoqu.git.log.extract.common.FlinkUtils;
 import com.xiaoqu.git.log.extract.common.SystemConfig;
 import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
 import com.xiaoqu.git.log.extract.webapi.jira.board.epic.JiraEpicFlow;
@@ -23,7 +24,7 @@ public class JiraBoardJob {
         SystemConfig.DatabaseConfig dbConfig = config.db;
         List<SystemConfig.JiraConfig> jiraConfigs = config.jiras;
 
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        final StreamExecutionEnvironment env = FlinkUtils.getRemoteEnvironment();
         for (SystemConfig.JiraConfig jiraConfig: jiraConfigs) {
             SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env, dbConfig);
             jiraSprintFlow(dbConfig, jiraConfig, jiraBoardFlow);
