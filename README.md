@@ -124,3 +124,8 @@ https://docs.atlassian.com/jira-software/REST/7.3.1/
 
 ## other notes
 flink need 50 task slots
+
+## flink submit job
+```bash
+flink run -d git_log_extract-1.0-all.jar
+```
