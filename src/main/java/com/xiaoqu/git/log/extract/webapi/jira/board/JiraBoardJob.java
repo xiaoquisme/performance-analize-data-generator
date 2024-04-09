@@ -84,7 +84,7 @@ public class JiraBoardJob {
     }
 
     private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env, SystemConfig.DatabaseConfig dbConfig) {
-        return env.addSource(new JiraBoardSouce(jiraConfig))
+        return env.addSource(new JiraBoardSource(jiraConfig))
                 .name("read data from remote")
                 .keyBy(item -> item.id)
                 .map(new JiraBoardSinkMap(dbConfig))

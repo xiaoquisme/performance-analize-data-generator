@@ -7,9 +7,9 @@ import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
 import java.io.IOException;
 
-public class JiraBoardSouce extends RichSourceFunction<JiraBoardResponse.JiraBoard> {
+public class JiraBoardSource extends RichSourceFunction<JiraBoardResponse.JiraBoard> {
     private final SystemConfig.JiraConfig jiraConfig;
-    public JiraBoardSouce(SystemConfig.JiraConfig jiraConfig) {
+    public JiraBoardSource(SystemConfig.JiraConfig jiraConfig) {
         this.jiraConfig = jiraConfig;
     }
 
