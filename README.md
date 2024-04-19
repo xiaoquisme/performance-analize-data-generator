@@ -16,6 +16,7 @@ then copy `git_log.txt` to `resource` folder.
 
 ```sql
 create database performance_analyze;
+use performance_analyze;
 create table performance_analyze.git_log
 (
     id varchar(100) primary key ,
