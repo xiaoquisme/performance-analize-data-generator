@@ -19,7 +19,7 @@ public class EntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
     public static void main(String[] args) throws Exception {
-        String currentDay = DatetimeUtils.currentDay;
+        String currentDay = DatetimeUtils.currentDay.get();
         createJiraTable(currentDay);
         GithubWebApiJob.run();
         JiraBoardJob.run();
