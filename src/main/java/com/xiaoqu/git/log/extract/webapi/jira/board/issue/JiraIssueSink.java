@@ -17,7 +17,7 @@ public class JiraIssueSink extends SinkBase<JiraIssue> {
     public void open(Configuration parameters) throws Exception {
         String table = getTableName("jira_issue");
         String sql = String.format("INSERT INTO %s(id, epic_id, epic_key, `key`, issue_type, title, discription, timetracking_spent, story_point, current_sprint, status, reporter, assignee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on duplicate key update id = id;", table);
-        prepare(sql, dbConfig);
+        prepare(sql);
     }
 
     @Override

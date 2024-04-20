@@ -1,19 +1,17 @@
 package com.xiaoqu.git.log.extract;
 
 import com.xiaoqu.git.log.extract.common.DatetimeUtils;
-import com.xiaoqu.git.log.extract.common.SystemConfig;
-import com.xiaoqu.git.log.extract.common.SystemConfigLoader;
-import com.xiaoqu.git.log.extract.webapi.github.GithubWebApiJob;
 import com.xiaoqu.git.log.extract.webapi.jira.board.JiraBoardJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.xiaoqu.git.log.extract.common.MysqlThreadPool.getConnection;
 
 public class EntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
@@ -25,8 +23,8 @@ public class EntryPoint {
         JiraBoardJob.run();
     }
 
-    private static void createJiraTable(String currentDay) throws SQLException, ClassNotFoundException {
-        try (Connection dbConnection = getDbConnection(SystemConfigLoader.config.db)) {
+    private static void createJiraTable(String currentDay) throws SQLException {
+        try (Connection dbConnection = getConnection()) {
             List<String> list = Arrays.asList(
                     String.format("call create_jira_board('%s');", currentDay),
                     String.format("call create_jira_epic('%s');", currentDay),
@@ -45,15 +43,4 @@ public class EntryPoint {
             statement.close();
         }
     }
-
-    private static Connection getDbConnection(SystemConfig.DatabaseConfig dbConfig) throws ClassNotFoundException, SQLException {
-        String driver = dbConfig.driver;
-        String url = dbConfig.url;
-        String username = dbConfig.username;
-        String password = dbConfig.password;
-        Class.forName(driver);
-
-        return DriverManager.getConnection(url, username, password);
-    }
-
 }

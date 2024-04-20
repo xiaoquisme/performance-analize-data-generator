@@ -77,5 +77,10 @@ public class JiraIssue {
             public String id;
             public String key;
         }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class FixVersion {
+            public String name;
+        }
     }
 }

@@ -15,7 +15,7 @@ public class JiraSprintSink extends SinkBase<JiraSprintResponse.JiraSprint> {
     public void open(Configuration parameters) throws Exception {
         String tableName = getTableName("jira_sprint");
         String sql = String.format("INSERT INTO %s(id, boardId, state, name, goal) VALUES (?, ?, ?, ?, ?) on duplicate key update id = id;", tableName);
-        prepare(sql, dbConfig);
+        prepare(sql);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class MysqlSink extends SinkBase<CommitLog> {
     @Override
     public void open(Configuration parameters) throws Exception {
         String sql = "insert into git_log(id,repo_owner,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?,?) on duplicate key update id = id;";
-        prepare(sql,dbConfig);
+        prepare(sql);
     }
 
     @Override

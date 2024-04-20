@@ -13,7 +13,8 @@ public class GithubWebApiJob {
         SystemConfig config = SystemConfigLoader.config;
 
         final StreamExecutionEnvironment env = getRemoteEnvironment();
-        env.addSource(new GithubOrgSource(config.github))
+        env.setParallelism(20)
+                .addSource(new GithubOrgSource(config.github))
                 .name("github repo source")
                 .keyBy(item -> item)
                 .flatMap(new GithubRepoSource(config.github, null))
