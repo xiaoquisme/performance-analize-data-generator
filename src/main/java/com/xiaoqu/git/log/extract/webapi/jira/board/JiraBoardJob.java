@@ -23,26 +23,25 @@ public class JiraBoardJob {
 
     public static void run() throws Exception {
         SystemConfig config = SystemConfigLoader.config;
-        SystemConfig.DatabaseConfig dbConfig = config.db;
         List<SystemConfig.JiraConfig> jiraConfigs = config.jiras;
 
         final StreamExecutionEnvironment env = FlinkUtils.getRemoteEnvironment();
         for (SystemConfig.JiraConfig jiraConfig: jiraConfigs) {
-            SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env, dbConfig);
-            jiraSprintFlow(dbConfig, jiraConfig, jiraBoardFlow);
-            jiraEpicFlow(dbConfig, jiraConfig, jiraBoardFlow);
+            SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow = getJiraBoardFlow(jiraConfig, env);
+            jiraSprintFlow(jiraConfig, jiraBoardFlow);
+            jiraEpicFlow(jiraConfig, jiraBoardFlow);
         }
 
         env.execute("sync jira board to db");
     }
 
-    private static void jiraEpicFlow(SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
+    private static void jiraEpicFlow(SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
         jiraBoardFlow
                 .keyBy(item -> item.id)
                 .flatMap(new JiraEpicFlow(jiraConfig))
                 .name("jira epic flat map flow")
                 .keyBy(value -> value.boardId)
-                .map(new JiraEpicSinkMap(dbConfig))
+                .map(new JiraEpicSinkMap())
                 .name("jira epic sink map")
                 .flatMap(new JiraIssueEpicFlow(jiraConfig, "%s/rest/agile/1.0/board/%s/epic/%s/issue?startAt=%s&limit=50"))
                 .name("jira issue flat map flow")
@@ -51,13 +50,13 @@ public class JiraBoardJob {
                 .name("jira issue sink map flow");
     }
 
-    private static void jiraSprintFlow(SystemConfig.DatabaseConfig dbConfig, SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
+    private static void jiraSprintFlow(SystemConfig.JiraConfig jiraConfig, SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> jiraBoardFlow) {
         jiraBoardFlow
                 .keyBy(item -> item.id)
                 .flatMap(new JiraSprintFlow(jiraConfig))
                 .name("flat map jira sprint")
                 .keyBy(item -> item.id)
-                .map(new JIraSprintSinkMap(dbConfig))
+                .map(new JIraSprintSinkMap())
                 .name("sink jira sprint")
                 .keyBy(item -> item.id)
                 .flatMap(new JiraIssueSprintFlow(jiraConfig, "%s/rest/agile/1.0/board/%s/sprint/%s/issue?startAt=%s&limit=50"))
@@ -79,13 +78,13 @@ public class JiraBoardJob {
                 .name("jira work log sink flow");
     }
 
-    private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env, SystemConfig.DatabaseConfig dbConfig) {
+    private static SingleOutputStreamOperator<JiraBoardResponse.JiraBoard> getJiraBoardFlow(SystemConfig.JiraConfig jiraConfig, StreamExecutionEnvironment env) {
         return env
                 .setParallelism(10)
                 .addSource(new JiraBoardSource(jiraConfig))
                 .name("read data from remote")
                 .keyBy(item -> item.id)
-                .map(new JiraBoardSinkMap(dbConfig))
+                .map(new JiraBoardSinkMap())
                 .name("sink to db map");
     }
 }
