@@ -1,12 +1,14 @@
 package com.xiaoqu.git.log.extract.common;
 
+import com.zaxxer.hikari.HikariConfig;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class SystemConfig {
-    public DatabaseConfig  db;
     public GithubConfig github;
     public List<JiraConfig> jiras;
+    public HikariConfig db;
 
     public static class DatabaseConfig implements Serializable {
         private static final long serialVersionUID = -1082413991501913743L;

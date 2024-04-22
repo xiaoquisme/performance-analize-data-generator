@@ -16,8 +16,6 @@ public class SystemConfigLoader {
         config =  yaml.load(resourceAsStream);
     }
     public static HikariConfig getHikariConfig() {
-        // get file path from hikari.properties
-        Path path = Paths.get(SystemConfigLoader.class.getClassLoader().getResource("hikari.properties").getPath());
-        return new HikariConfig(path.toString());
+        return config.db;
     }
 }

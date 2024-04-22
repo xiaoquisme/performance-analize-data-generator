@@ -1,29 +1,19 @@
 package com.xiaoqu.git.log.extract.webapi.jira.board.epic;
 
 
-import com.xiaoqu.git.log.extract.common.SystemConfig;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class JiraEpicSource extends RichSourceFunction<JiraBoardDb> {
-    private SystemConfig.DatabaseConfig dbConfig;
+import static com.xiaoqu.git.log.extract.common.MysqlThreadPool.getConnection;
 
-    public JiraEpicSource(SystemConfig.DatabaseConfig dbConfig) {
-        this.dbConfig = dbConfig;
-    }
+public class JiraEpicSource extends RichSourceFunction<JiraBoardDb> {
 
     @Override
     public void run(SourceContext<JiraBoardDb> ctx) throws Exception {
-        String driver = dbConfig.driver;
-        String url = dbConfig.url;
-        String username = dbConfig.username;
-        String password = dbConfig.password;
-        Class.forName(driver);
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
             try(ResultSet resultSet = statement.executeQuery("select id, name, type from jira_board")) {
                 while (resultSet.next()) {
