@@ -13,7 +13,7 @@ public class JiraIssueLablesSink extends SinkBase<JiraIssue> {
     @Override
     public void open(Configuration parameters) throws Exception {
         String table = getTableName("jira_issue_label");
-        String sql = String.format("INSERT INTO %s(`jira_issue_key`,name) VALUES (?, ?) ", table);
+        String sql = String.format("INSERT INTO %s(`issue_key`,name) VALUES (?, ?) ", table);
         prepare(sql);
     }
 
