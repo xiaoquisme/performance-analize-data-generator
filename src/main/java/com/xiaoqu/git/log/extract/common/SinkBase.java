@@ -29,7 +29,7 @@ public abstract class SinkBase<T> extends RichSinkFunction<T> {
     }
 
     protected String getTableName(String tableName) {
-        return String.format("%s_%s", tableName, DatetimeUtils.currentDay.get());
+        return String.format("%s_%s", tableName, DatetimeUtils.currentDay);
     }
 }
 

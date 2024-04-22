@@ -26,7 +26,7 @@ public class GithubWebApiJob {
                 .map(new ProjectMapper())
                 .name("github project mapper")
                 .keyBy(CommitLog::getRepoName)
-                .addSink(new MysqlSink(config.db))
+                .addSink(new MysqlSink())
                 .name("github mysql flow");
         env.execute("Sync github log to DB");
     }

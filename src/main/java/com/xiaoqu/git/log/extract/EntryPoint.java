@@ -17,9 +17,9 @@ public class EntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
     public static void main(String[] args) throws Exception {
-        String currentDay = DatetimeUtils.currentDay.get();
+        String currentDay = DatetimeUtils.currentDay;
         createJiraTable(currentDay);
-        GithubWebApiJob.run();
+//        GithubWebApiJob.run();
         JiraBoardJob.run();
     }
 
@@ -29,9 +29,11 @@ public class EntryPoint {
                     String.format("call create_jira_board('%s');", currentDay),
                     String.format("call create_jira_epic('%s');", currentDay),
                     String.format("call create_jira_sprint('%s');", currentDay),
+                    String.format("call create_jira_worklog('%s');", currentDay),
                     String.format("call create_jira_issue('%s');", currentDay),
-                    String.format("call create_jira_worklog('%s');", currentDay)
-            );
+                    String.format("call create_jira_issue_fix_version('%s');", currentDay),
+                    String.format("call create_jira_issue_label('%s');", currentDay)
+                    );
             Statement statement = dbConnection.createStatement();
             list.forEach(sql -> {
                 try {

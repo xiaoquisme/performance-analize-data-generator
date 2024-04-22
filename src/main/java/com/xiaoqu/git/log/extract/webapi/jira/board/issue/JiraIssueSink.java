@@ -1,18 +1,11 @@
 package com.xiaoqu.git.log.extract.webapi.jira.board.issue;
 
 import com.xiaoqu.git.log.extract.common.SinkBase;
-import com.xiaoqu.git.log.extract.common.SystemConfig;
 import org.apache.flink.configuration.Configuration;
 
 import java.util.Optional;
 
 public class JiraIssueSink extends SinkBase<JiraIssue> {
-    private final SystemConfig.DatabaseConfig dbConfig;
-
-    public JiraIssueSink(SystemConfig.DatabaseConfig dbConfig) {
-        this.dbConfig = dbConfig;
-    }
-
     @Override
     public void open(Configuration parameters) throws Exception {
         String table = getTableName("jira_issue");

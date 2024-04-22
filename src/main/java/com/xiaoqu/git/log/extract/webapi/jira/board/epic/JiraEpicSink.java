@@ -1,18 +1,11 @@
 package com.xiaoqu.git.log.extract.webapi.jira.board.epic;
 
 import com.xiaoqu.git.log.extract.common.SinkBase;
-import com.xiaoqu.git.log.extract.common.SystemConfig;
 import org.apache.flink.configuration.Configuration;
 
 import java.sql.SQLException;
 
 public class JiraEpicSink extends SinkBase<JiraEpic> {
-    private final SystemConfig.DatabaseConfig dbConfig;
-
-    public JiraEpicSink(SystemConfig.DatabaseConfig config) {
-        dbConfig = config;
-    }
-
     @Override
     public void open(Configuration parameters) throws Exception {
         String tableName = getTableName("jira_epic");

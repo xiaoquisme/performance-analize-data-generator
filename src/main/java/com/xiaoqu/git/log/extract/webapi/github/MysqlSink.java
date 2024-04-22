@@ -3,16 +3,9 @@ package com.xiaoqu.git.log.extract.webapi.github;
 
 import com.xiaoqu.git.log.extract.common.CommitLog;
 import com.xiaoqu.git.log.extract.common.SinkBase;
-import com.xiaoqu.git.log.extract.common.SystemConfig;
 import org.apache.flink.configuration.Configuration;
 
 public class MysqlSink extends SinkBase<CommitLog> {
-    private SystemConfig.DatabaseConfig dbConfig;
-
-    public MysqlSink(SystemConfig.DatabaseConfig dbConfig) {
-        this.dbConfig = dbConfig;
-    }
-
     @Override
     public void open(Configuration parameters) throws Exception {
         String sql = "insert into git_log(id,repo_owner,project,jira_no, message, author, commit_date,commit_email)values(?,?,?,?,?,?,?,?) on duplicate key update id = id;";

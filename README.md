@@ -98,6 +98,42 @@ EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 END;
 
+CREATE PROCEDURE create_jira_issue_fix_version(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_issue_fix_version_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
+   id bigint primary key auto_increment,
+   issue_key varchar(100) comment ''issue key'',
+   name varchar(100) comment ''name''
+)');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @sql2 = CONCAT('ALTER TABLE ', @table_name, ' ADD unique INDEX idx_issue_key_name(issue_key, name);');
+PREPARE stmt FROM @sql2;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
+CREATE PROCEDURE create_jira_issue_label(IN date VARCHAR(255))
+BEGIN
+    SET @table_name = CONCAT('jira_issue_label_', date);
+    SET @sql = CONCAT('CREATE TABLE ', @table_name, '(
+   id bigint primary key auto_increment,
+   issue_key varchar(100) comment ''issue key'',
+   name varchar(100) comment ''name''
+);');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @sql2 = CONCAT('ALTER TABLE ', @table_name, ' ADD unique INDEX idx_issue_key_name(issue_key, name);');
+PREPARE stmt FROM @sql2;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+END;
+
 CREATE PROCEDURE create_jira_worklog(IN date VARCHAR(255))
 BEGIN
     SET @table_name = CONCAT('jira_worklog_', date);
